@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<form method="POST" action="{{ url_for('sports_create') }}">
+  <input type="text" name="name" />
+  <input type="submit" value="add a new sport" />
+</form>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <title>JatkoErä</title>
+    </head>
+
+    <body>
+
+      <h1>JatkoErä</h1>
+      <ul>
+        <li><a href="{{ url_for('sports_index') }}">List sports</a></li>
+        <li><a href="{{ url_for('sports_form') }}">Add a sport</a></li>
+      </ul>
+      {% block body %}
+      <p>
+	      Tähän tuodaan sisältö muualta.
+      </p>
+      {% endblock %}
+    </body>
+  </html>

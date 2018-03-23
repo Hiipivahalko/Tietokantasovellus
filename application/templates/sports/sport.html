@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h2>{{ sport.name }}</h2>
+
+<button><a href="{{ url_for('sport_change', sport_id=sport.id) }}">update</a></button>
+
+{% endblock %}

@@ -1,0 +1,2 @@
+-admin can add new sports and kategories of sport
+-admin can updates those too
