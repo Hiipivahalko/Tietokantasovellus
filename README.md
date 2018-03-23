@@ -21,4 +21,5 @@ Toimintoja:
 
 #### LINKKEJÄ
 
-
+* [Tietokantakaavio hahmotelma](https://github.com/Hiipivahalko/Tietokantasovellus/blob/master/documentation/tsoha-Tkanta-hahmotelma.pdf)
+* [user story](https://github.com/Hiipivahalko/Tietokantasovellus/blob/master/documentation/userStory.txt)
