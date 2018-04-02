@@ -1,2 +1,5 @@
--admin can add new sports and kategories of sport
--admin can updates those too
+-admin and user can write message
+-admin and user  can create channel and update it
+-admin can remove users
+-admin and user can update their informations
+-user can create account for own use
