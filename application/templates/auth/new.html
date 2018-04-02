@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h2>Create Account</h2>
+
+{% for error in errors %}
+<p>{{ error }}</p>
+{% endfor %}
+
+<form method="POST" action="{{ url_for('account_create') }}">
+  <table>
+    <tr>
+      <td>{{ form.username.label }}</td>
+      <td>{{ form.username }}</td>
+    </tr>
+    <tr>
+      <td>{{ form.password.label }}</td>
+      <td>{{ form.password }}</td>
+    </tr>
+    <tr>
+      <td>{{ form.motto.label }}</td>
+      <td>{{ form.motto }}</td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" value="Register" /></td>
+    </tr>
+  </table>
+</form>
+
+{% endblock %}

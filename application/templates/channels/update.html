@@ -1,0 +1,28 @@
+
+{% extends "layout.html" %}
+
+{% block body %}
+
+<p>Old name: {{ channel.name }}</p>
+
+<form method="POST" action="{{ url_for('channel_update', channel_id=channel.id) }}">
+    <table>
+      <tr>
+        <td>{{ form.name.label }}</td>
+        <td>{{ form.name }}</td>
+        <td>
+          <ul>
+            {% for error in form.name.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2"><input type="submit" value="Change name" /></td>
+      </tr>
+    </table>
+    
+  </form>
+
+{% endblock %}

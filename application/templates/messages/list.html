@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h3>Messages</h3>
+<ul>
+  {% for message in messages %}
+
+  <li>{{ message.body }}</li>
+
+  {% endfor %}
+</ul>
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h2>{{ channel.name }}</h2>
+
+<button><a href="{{ url_for('channel_change', channel_id=channel.id) }}">update</a></button>
+
+{% endblock %}

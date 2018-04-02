@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<form method="POST" action="{{ url_for('messages_create') }}">
+  <table>
+    <tr>
+      <td>{{ form.body.label }}</td>
+      <td>{{ form.body }}</td>
+      <td>
+        <ul>
+          {% for error in form.body.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" value="add a new message" /></td>
+    </tr>
+  </table>
+  
+</form>
+
+{% endblock %}

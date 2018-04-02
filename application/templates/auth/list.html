@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h3>All application users</h3>
+
+
+  {% for account in accounts %}
+
+  {% if account.admin == False %}
+  <form method="POST" action="{{ url_for('accounts_delete', account_id=account.id) }}">
+    <span>{{ account.username }}</span>
+    <input type="submit" value="DELETE" />
+  </form>
+  {% endif %}
+
+  {% endfor %}
+
+
+{% endblock %}

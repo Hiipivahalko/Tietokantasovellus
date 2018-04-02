@@ -2,16 +2,35 @@
   <html>
     <head>
       <meta charset="utf-8">
-      <title>JatkoErä</title>
+      <title>varjoForum</title>
     </head>
 
     <body>
 
-      <h1>JatkoErä</h1>
-      <ul>
-        <li><a href="{{ url_for('sports_index') }}">List sports</a></li>
-        <li><a href="{{ url_for('sports_form') }}">Add a sport</a></li>
-      </ul>
+      {% if current_user.is_authenticated %}
+      <p>
+        Loged in as {{ current_user.username  }}
+      </p>
+      {% endif %}
+
+      <h1>varjoForum</h1>
+
+        <ul>
+          <li><a href="{{ url_for('channels_index') }}">List all channels</a></li>
+          <li><a href="{{ url_for('messages_index') }}">list all messages</a></li>
+          {% if current_user.is_authenticated %}
+          <li><a href="{{ url_for('messages_create') }}">write a message</a></li>
+          <li><a href="{{ url_for('channel_form') }}">create a new channel</a></li>
+          <li><a href="{{ url_for('single_account_index') }}">my account</a></li>
+          <li><a href="{{ url_for('auth_logout') }}">Logout</a></li>
+          {% else %}
+          <li><a href="{{ url_for('auth_login') }}">Login to varjoForum</a></li>
+          <li><a href="{{ url_for('account_create') }}">create account to varjoForum</a></li>
+          {% endif %}
+          {% if current_user.admin == True %}
+          <li><a href="{{ url_for('account_list') }}">Manage accounts</a></li>
+          {% endif %}
+        </ul>
       {% block body %}
       <p>
 	      Tähän tuodaan sisältö muualta.
