@@ -23,3 +23,9 @@ Toimintoja:
 
 * [Tietokantakaavio hahmotelma](https://github.com/Hiipivahalko/Tietokantasovellus/blob/master/documentation/otm-Tietokanta_hahmotelma_1.jpg)
 * [user story](https://github.com/Hiipivahalko/Tietokantasovellus/blob/master/documentation/userStory.txt)
+
+
+### esimerkkikäyttäjätunnukset
+
+* admin:admin (admin oikeudet)
+* test:test (normaalikäyttäjä)
