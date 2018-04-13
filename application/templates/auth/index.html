@@ -5,6 +5,7 @@
 <h1>My Account</h1>
 
 <h2>username: {{ account.username }}</h2>
+<p>Email: {{account.email }}</p>
 <p>motto: {{ account.motto }}</p>
 
 <p><b>update your account</b></p>
@@ -15,21 +16,6 @@
 
 <form method="POST" action="{{ url_for('accounts_update', account_id=account.id) }}">
   <table>
-    <tr>
-      <td>
-        <ul>
-          {% for error in form.username.errors %}
-          <li>{{ error }}</li>
-          {% endfor %}
-          {% for error in form.password.errors %}
-          <li>{{ error }}</li>
-          {% endfor %}
-          {% for error in form.motto.errors %}
-          <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      </td>
-    </tr>
     <tr>
       <td>{{ form.username.label }}</td>
       <td>{{ form.username }}</td>
@@ -43,6 +29,10 @@
       <td>{{ form.motto }}</td>
     </tr>
     <tr>
+      <td>{{ form.email.label }}</td>
+      <td>{{ form.email }}</td>
+    </tr>
+    <tr>
       <td colspan="2"><input type="submit" value="update" /></td>
     </tr>
   </table>
@@ -50,11 +40,11 @@
 
 <p><b>channels you have created</b></p>
 
-<!--><ul>
-    {% for channel in channels %}
-    <li>{{ channel }}</li>
-    {% endfor %}
+<ul>
+  {% for channel in channels %}
+  <li>{{ channel.name }}</li>
+  {% endfor %}
 </ul>
--->
+
 
 {% endblock %}

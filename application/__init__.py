@@ -26,6 +26,9 @@ from application.auth import views
 from application.messages import models
 from application.messages import views
 
+from application.comments import models
+from application.comments import views
+
 # login
 from application.auth.models import Account
 from os import urandom

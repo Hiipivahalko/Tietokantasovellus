@@ -4,6 +4,48 @@
 
 <h2>{{ channel.name }}</h2>
 
-<button><a href="{{ url_for('channel_change', channel_id=channel.id) }}">update</a></button>
+{% if allready_join == False %}
+<form method="POST" action="{{ url_for('channels_join', channel_id=channel.id) }}">
+  <button type="submit">Join this channel</button>
+</form>
+{% endif %}
+
+{% if current_user.admin == True %}
+<button>
+  <a href="{{ url_for('channel_change', channel_id=channel.id) }}">update</a>
+</button>
+{% endif %}
+
+{% if current_user.is_authenticated %}
+<form method="POST" action="{{ url_for('messages_create', channel_id=channel.id) }}">
+  <table>
+    <tr>
+      <td>{{ form.body.label }}</td>
+      <td>{{ form.body }}</td>
+      <td>
+        <ul>
+          {% for error in form.body.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" value="add a new message" /></td>
+    </tr>
+  </table>
+</form>
+{% endif %}
+
+<ul>
+  {% for message in messages %}
+
+  <li><a href="{{ url_for('message_index', channel_id=channel.id, message_id=message.id) }}">{{ message.body }}</a><span> -- {{ message.writer }} --</span></li>
+
+  {% endfor %}
+</ul>
+
+
+
 
 {% endblock %}

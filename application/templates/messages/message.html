@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h2>{{ channel.name }}</h2>
+
+<p><b>{{ message.body }}</b></p>
+
+<form method="POST" action="{{ url_for('message_new_comment', channel_id=channel.id, message_id=message.id) }}">
+  <table>
+    <tr>
+      <td>{{ form.body.label }}</td>
+      <td>{{ form.body }}</td>
+      <td>
+        <ul>
+          {% for error in form.body.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" value="add a new comment" /></td>
+    </tr>
+  </table>
+</form>
+
+<ul>
+  {% for comment in comments %}
+  <li>{{ comment.body }} -- {{ comment.writer }} --</li>
+  {% endfor %}
+</ul>
+
+
+
+{% endblock %}
