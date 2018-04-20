@@ -2,49 +2,78 @@
 
 {% block body %}
 
-<h1>My Account</h1>
 
-<h2>username: {{ account.username }}</h2>
-<p>Email: {{account.email }}</p>
-<p>motto: {{ account.motto }}</p>
 
-<p><b>update your account</b></p>
 
-{% for error in errors %}
-<p>{{ error }}</p>
-{% endfor %}
+<!-- UPDATE YOUR ACCOUNT -->
 
-<form method="POST" action="{{ url_for('accounts_update', account_id=account.id) }}">
-  <table>
-    <tr>
-      <td>{{ form.username.label }}</td>
-      <td>{{ form.username }}</td>
-    </tr>
-    <tr>
-      <td>{{ form.password.label }}</td>
-      <td>{{ form.password }}</td>
-    </tr>
-    <tr>
-      <td>{{ form.motto.label }}</td>
-      <td>{{ form.motto }}</td>
-    </tr>
-    <tr>
-      <td>{{ form.email.label }}</td>
-      <td>{{ form.email }}</td>
-    </tr>
-    <tr>
-      <td colspan="2"><input type="submit" value="update" /></td>
-    </tr>
-  </table>
-</form>
+<div class="container" >
+  <div class="row" style="padding-bottom: 50px">
+    <div class="col-md-auto">
 
-<p><b>channels you have created</b></p>
+      <!-- INFORMATION OF YOUR ACCOUNT -->
 
-<ul>
-  {% for channel in channels %}
-  <li>{{ channel.name }}</li>
-  {% endfor %}
-</ul>
+      <h1 style="padding-bottom: 50px">My Account</h1>
+
+      <h2>username: {{ account.username }}</h2>
+      <p>Email: {{account.email }}</p>
+      <p>motto: {{ account.motto }}</p>
+    </div>
+    <div class="col-md-auto">
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <p><b>channels you have created</b></p>
+
+      <ul>
+        {% for channel in channels %}
+          <li>{{ channel.name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col">
+      <p><b>update your account</b></p>
+
+      {% for error in errors %}
+        <p>{{ error }}</p>
+      {% endfor %}
+
+      <form method="POST" action="{{ url_for('accounts_update', account_id=account.id) }}" name="accountform">
+        <div class="form-group">
+          <table>
+            <tr>
+              <td>{{ accountform.username.label }}</td>
+              <td>{{ accountform.username(class="form-control") }}</td>
+            </tr>
+            <tr>
+              <td>{{ accountform.password.label }}</td>
+              <td>{{ accountform.password(class="form-control") }}</td>
+            </tr>
+            <tr>
+              <td>{{ accountform.motto.label }}</td>
+              <td>{{ accountform.motto(class="form-control") }}</td>
+            </tr>
+            <tr>
+              <td>{{ accountform.email.label }}</td>
+              <td>{{ accountform.email(class="form-control") }}</td>
+            </tr>
+            <tr>
+              <td colspan="2"><button type="submit" class="btn btn-warning">UPDATE</button</td>
+            </tr>
+          </table>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- CHANNELS WHAT YOU HAVE CREATE -->
+
+
 
 
 {% endblock %}

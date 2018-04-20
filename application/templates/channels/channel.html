@@ -2,7 +2,11 @@
 
 {% block body %}
 
+<!-- CHANNEL -->
+
 <h2>{{ channel.name }}</h2>
+
+<!-- JOIN TO CHANNEL -->
 
 {% if allready_join == False %}
 <form method="POST" action="{{ url_for('channels_join', channel_id=channel.id) }}">
@@ -10,41 +14,45 @@
 </form>
 {% endif %}
 
-{% if current_user.admin == True %}
 
-<a href="{{ url_for('channel_change', channel_id=channel.id) }}">
-  <button type="button" class="btn btn-secondary btn-lg" >update</button>
-</a>
+<!-- IF YOU ARE ADMIN OF CHANNEL YOU CAN UPDATE IT -->
+
+{% if current_user.admin == True %}
+  <a href="{{ url_for('channel_change', channel_id=channelid) }}" >
+    <button type="button" class="btn btn-secondary btn-lg" >update</button>
+  </a>
 {% endif %}
+
+
+<!-- NEW MESSAGE FORM -->
 
 {% if current_user.is_authenticated %}
-<form method="POST" action="{{ url_for('messages_create', channel_id=channel.id) }}">
-  <div class="form-group">
-    <h6>{{ form.body.label }}</h6>
-    {{ form.body }}
-    {% for error in form.body.errors %}
-      {{ error }}
-    {% endfor %}
-  </div>
-
-      
-
-          
-
-        <button type="submit" class="btn btn-primary btn-lg btn-block">Add new message</button>
-
-</form>
+  <form method="POST" action="{{ url_for('messages_create', channel_id=channel.id) }}" name="messageform" style="padding-bottom: 100px; padding-top: 30px">
+    <div class="form-group">
+      <h6>{{ messageform.body.label }}</h6>
+      {{ messageform.body(class="form-control", rows=10) }}
+      {% for error in messageform.body.errors %}
+        {{ error }}
+      {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary btn-lg btn-block" >submit message</button>
+  </form>
 {% endif %}
 
-<ul>
-  {% for message in messages %}
 
-  <li><a href="{{ url_for('message_index', channel_id=channel.id, message_id=message.id) }}">{{ message.body }}</a><span> -- {{ message.writer }} --</span></li>
+<!-- LIST OF MESSAGES -->
 
-  {% endfor %}
-</ul>
-
-
-
+{% for message in que %}
+  <div class="list-group" style="padding: 10px">
+    <a href="{{ url_for('message_index', channel_id=channel.id, message_id=message.message_id) }}" class="list-group-item list-group-item-action flex-column align-items-start active">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">-- {{ message.writer }} --</h5>
+        <small>{{ message.date }}</small>
+      </div>
+      <p class="mb-1" style="padding: 7px">{{ message.body }}</p>
+      <small>({{ message.comment_count }}) comments</small>
+    </a>
+  </div>
+{% endfor %}
 
 {% endblock %}

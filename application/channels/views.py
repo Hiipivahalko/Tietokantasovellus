@@ -9,21 +9,14 @@ from application.messages.models import Message
 from application.messages.forms import MessageForm
 
 
-# list of all channels
-
-@app.route("/channels/", methods=["GET"])
-@login_required
-def channels_index():
-  return render_template("channels/list.html", channels = Channel.query.all())
-
-
 
 # create new channel
 
 @app.route("/channels/new")
 @login_required
 def channel_form():
-  return render_template("channels/new.html", form = ChannelForm())
+  return render_template("channels/new.html", channelform = ChannelForm(), my_channels=Channel.get_my_channels(current_user.id),
+    all_channels=Channel.get_channels_where_not_in(current_user.id))
 
 
 
@@ -32,10 +25,10 @@ def channel_form():
 @app.route("/channels/", methods=["POST"])
 def channels_create():
 
-  form = ChannelForm(request.form)
+  channelform = ChannelForm(request.form)
 
-  if not form.validate():
-    return render_template("channels/new.html", form = form)
+  if not channelform.validate():
+    return render_template("channels/new.html", channelform = channelform)
 
   channel = Channel(request.form.get("name"))
 
@@ -51,21 +44,12 @@ def channels_create():
 # single channel view
 
 @app.route("/channels/<channel_id>/", methods=["GET"])
-# @login_required
+@login_required
 def one_channel_index(channel_id):
-  channel = Channel.query.get(channel_id)
-  totuus = False
-  id = 0
-  if current_user.is_authenticated:
-    id = current_user.id
 
-  comments_count = Message.count_how_many_comments()
-  print("tän alla")
-  print(comments_count)
-  print("tulos on täälläääääääääääääää")
-  
-  return render_template("channels/channel.html", channel = channel,
-    form = MessageForm(), messages = channel.messages)
+  return render_template("channels/channel.html", messageform = MessageForm(), channel = Channel.query.get(channel_id),
+    que = Message.count_how_many_comments(channel_id), my_channels=Channel.get_my_channels(current_user.id),
+    all_channels=Channel.get_channels_where_not_in(current_user.id))
 
 
 
@@ -76,7 +60,7 @@ def one_channel_index(channel_id):
 def channel_change(channel_id):
 
   return render_template("channels/update.html", channel = Channel.query.get(channel_id),
-    form = ChannelForm())
+    channelform = ChannelForm())
 
 
 
@@ -86,11 +70,10 @@ def channel_change(channel_id):
 @login_required
 def channel_update(channel_id):
   c = Channel.query.get(channel_id)
-  form = ChannelForm(request.form)
+  channelform = ChannelForm(request.form)
 
-  if not form.validate():
-    return render_template("channels/update.html", channel = c, form = form)
-
+  if not channelform.validate():
+    return render_template("channels/update.html", channel = c, channelform = channelform)
 
   c.name = request.form.get("name")
   db.session().commit()

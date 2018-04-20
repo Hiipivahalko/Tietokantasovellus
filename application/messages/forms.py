@@ -1,6 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import TextAreaField, validators
 
+
+# Form to create new message or comment
+
 class MessageForm(FlaskForm):
   body = TextAreaField("Write your message: ", [validators.length(min=2)])
 

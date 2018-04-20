@@ -2,34 +2,51 @@
 
 {% block body %}
 
-<h2>{{ channel.name }}</h2>
+<!-- MESSAGE PAGE - MESSAGE BODY -- -->
 
-<p><b>{{ message.body }}</b></p>
 
-<form method="POST" action="{{ url_for('message_new_comment', channel_id=channel.id, message_id=message.id) }}">
-  <table>
-    <tr>
-      <td>{{ form.body.label }}</td>
-      <td>{{ form.body }}</td>
-      <td>
-        <ul>
-          {% for error in form.body.errors %}
-          <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2"><input type="submit" value="add a new comment" /></td>
-    </tr>
-  </table>
+  <a href="{{ url_for('one_channel_index', channel_id=channel.id) }}">
+    <button type="submit" class="btn btn-danger">Back</button>
+  </a>
+
+
+<h1 style="padding-bottom: 100px">{{ channel.name }}</h1>
+
+<h4><b>{{ message.body }}</b></h4>
+
+
+<!-- ADD COMMENT -->
+
+<form method="POST" action="{{ url_for('message_new_comment', channel_id=channel.id, message_id=message.id) }}"
+    name="messageform" style="padding-bottom: 100px; padding-top: 30px">
+  <div class="form-group">
+      <h6>Write your comment: </h6>
+      {{ messageform.body(class="form-control", rows=10) }}
+      {% for error in messageform.body.errors %}
+        {{ error }}
+      {% endfor %}
+
+  </div>
+  <button type="submit" class="btn btn-primary btn-lg btn-block" >submit your comment</button>
 </form>
 
-<ul>
-  {% for comment in comments %}
-  <li>{{ comment.body }} -- {{ comment.writer }} --</li>
-  {% endfor %}
-</ul>
+
+<!-- LIST OF COMMENTS -->
+
+
+{% for comment in comments %}
+<div class="list-group" style="padding: 10px">
+  <ul class="list-group" style="padding: ">
+    <div class="" style="padding-bottom: 5px">
+      <li class="list-group-item list-group-item-warning" >{{ comment.body }} <b>-- {{ comment.writer }} --</b>   <i><small>{{ comment.date_created }}</small></i></li>
+    </div>
+  </ul>
+</div>
+{% endfor %}
+
+
+
+
 
 
 

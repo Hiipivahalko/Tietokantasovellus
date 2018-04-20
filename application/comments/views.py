@@ -11,15 +11,17 @@ from application.messages.models import Message
 from application.messages.forms import MessageForm
 
 
+# post to add new comment to specific message
+
 @app.route("/channel/<channel_id>/message/<message_id>/newcomment/", methods=["POST"])
 def message_new_comment(channel_id, message_id):
 
-  form = MessageForm(request.form)
+  messageform = MessageForm(request.form)
 
-  if not form.validate():
+  if not messageform.validate():
     return redirect(url_for("message_index", channel_id=channel_id, message_id=message_id))
 
-  comment = Comment(form.body.data, current_user.username)
+  comment = Comment(messageform.body.data, current_user.username)
   comment.message_id = message_id
   comment.account_id = current_user.id
 

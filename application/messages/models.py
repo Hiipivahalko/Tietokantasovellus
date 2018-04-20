@@ -11,24 +11,30 @@ class Message(Base):
   account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
   channel_id = db.Column(db.Integer, db.ForeignKey('channel.id'), nullable=False)
 
-  #  messages = db.relationship("Message", backref='account', lazy=True)
   comments = db.relationship("Comment", backref='message', lazy=True)
 
   def __init__(self, body, writer):
     self.body = body
     self.writer = writer
 
+
+  # query to get messages comments count
+
   @staticmethod
-  def count_how_many_comments():
-    stmt = text("SELECT count(*) from Comment, Message"
-                " WHERE message.id = 1 and"
-                " message.id = comment.message_id")
+  def count_how_many_comments(channel_id):
+    stmt = text("SELECT Channel.id, Message.id, Channel.name, Message.body, COUNT(Comment.id), Message.writer, Message.date_created"
+                    " FROM Channel, Message"
+                    " LEFT JOIN Comment ON Message.id = Comment.message_id"
+                    " WHERE Channel.id = Message.channel_id"
+                        " and Channel.id = :channel_id"
+                    " GROUP BY Message.id").params(channel_id=channel_id)
 
     res = db.engine.execute(stmt)
-    # result = res[0]
-    print(res)
-    return res
+
+    response = []
+
+    for row in res:
+        response.append({"channel_id":row[0], "message_id":row[1], "channel_name":row[2], "body":row[3], "comment_count":row[4], "writer":row[5], "date":row[6], })
 
 
-
-
+    return response

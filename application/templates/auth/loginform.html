@@ -2,19 +2,21 @@
 
 {% block body %}
 
+<!-- LOGIN FORM -->
+
 <h2>Login</h2>
 
 {{ error }}
 
-<form method="POST" action="{{ url_for('auth_login') }}">
+<form method="POST" action="{{ url_for('auth_login') }}" name="loginform">
   <table>
     <tr>
-      <td>{{ form.username.label }}</td>
-      <td>{{ form.username }}</td>
+      <td>{{ loginform.username.label }}</td>
+      <td>{{ loginform.username }}</td>
     </tr>
     <tr>
-      <td>{{ form.password.label }}</td>
-      <td>{{ form.password }}</td>
+      <td>{{ loginform.password.label }}</td>
+      <td>{{ loginform.password }}</td>
     </tr>
     <tr>
       <td colspan="2"><input type="submit" value="Login" /></td>
