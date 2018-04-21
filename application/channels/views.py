@@ -2,7 +2,7 @@
 from flask import render_template, request, url_for, redirect
 from flask_login import login_required, current_user
 
-from application import app, db
+from application import app, db, views
 from application.channels.models import Channel
 from application.channels.forms import ChannelForm
 from application.messages.models import Message
@@ -15,29 +15,34 @@ from application.messages.forms import MessageForm
 @app.route("/channels/new")
 @login_required
 def channel_form():
-  return render_template("channels/new.html", channelform = ChannelForm(), my_channels=Channel.get_my_channels(current_user.id),
-    all_channels=Channel.get_channels_where_not_in(current_user.id))
+    return render_template("channels/new.html", channelform = ChannelForm(), my_channels=Channel.get_my_channels(current_user.id),
+        all_channels=Channel.get_channels_where_not_in(current_user.id))
 
 
 
-# path/method to create new channel if validation is good
+# create new channel if validation is good
 
 @app.route("/channels/", methods=["POST"])
+@login_required
 def channels_create():
 
-  channelform = ChannelForm(request.form)
+    channelform = ChannelForm(request.form)
 
-  if not channelform.validate():
-    return render_template("channels/new.html", channelform = channelform)
+    if not channelform.validate():
+        return render_template("channels/new.html", channelform = channelform,
+            my_channels=Channel.get_my_channels(current_user.id),
+            all_channels=Channel.get_channels_where_not_in(current_user.id))
 
-  channel = Channel(request.form.get("name"))
+    channel = Channel(channelform.name.data, channelform.introduction.data)
 
-  channel.accounts.append(current_user)
+    channel.accounts.append(current_user)
 
-  db.session().add(channel)
-  db.session().commit()
+    db.session().add(channel)
+    db.session().commit()
 
-  return redirect(url_for("channels_index"))
+    new_channel = Channel.get_channel_by_name(channel.name)
+
+    return redirect(url_for("one_channel_index", channel_id=new_channel))
 
 
 
@@ -47,9 +52,12 @@ def channels_create():
 @login_required
 def one_channel_index(channel_id):
 
-  return render_template("channels/channel.html", messageform = MessageForm(), channel = Channel.query.get(channel_id),
-    que = Message.count_how_many_comments(channel_id), my_channels=Channel.get_my_channels(current_user.id),
-    all_channels=Channel.get_channels_where_not_in(current_user.id))
+    if channel_id == "1":
+        return redirect(url_for("index"))
+
+    return render_template("channels/channel.html", messageform = MessageForm(), channel = Channel.query.get(channel_id),
+        que = Message.count_how_many_comments(channel_id), my_channels=Channel.get_my_channels(current_user.id),
+        all_channels=Channel.get_channels_where_not_in(current_user.id), allready_join = Channel.is_joined(channel_id, current_user.id))
 
 
 
@@ -59,8 +67,9 @@ def one_channel_index(channel_id):
 @login_required
 def channel_change(channel_id):
 
-  return render_template("channels/update.html", channel = Channel.query.get(channel_id),
-    channelform = ChannelForm())
+    return render_template("channels/update.html", channel = Channel.query.get(channel_id),
+        channelform = ChannelForm(), my_channels=Channel.get_my_channels(current_user.id),
+        all_channels=Channel.get_channels_where_not_in(current_user.id))
 
 
 
@@ -69,28 +78,32 @@ def channel_change(channel_id):
 @app.route("/channels/<channel_id>/", methods=["POST"])
 @login_required
 def channel_update(channel_id):
-  c = Channel.query.get(channel_id)
-  channelform = ChannelForm(request.form)
+    c = Channel.query.get(channel_id)
+    channelform = ChannelForm(request.form)
 
-  if not channelform.validate():
-    return render_template("channels/update.html", channel = c, channelform = channelform)
+    if not channelform.validate():
+        return render_template("channels/update.html", channel = c, channelform = channelform,
+            my_channels=Channel.get_my_channels(current_user.id),
+            all_channels=Channel.get_channels_where_not_in(current_user.id))
 
-  c.name = request.form.get("name")
-  db.session().commit()
+    c.name = channelform.name.data
+    c.introduction = channelform.introduction.data
+    db.session().commit()
 
-  return redirect(url_for("channels_index"))
+    return redirect(url_for("one_channel_index", channel_id=channel_id))
 
 
 
-# user join to channel
+# join to channel
+
 
 @app.route("/channel/join/<channel_id>/", methods=["POST"])
 @login_required
 def channels_join(channel_id):
-  channel = Channel.query.get(channel_id)
-  account = current_user
+    channel = Channel.query.get(channel_id)
+    account = current_user
 
-  channel.accounts.append(account)
-  db.session().commit()
+    channel.accounts.append(account)
+    db.session().commit()
 
-  return redirect(url_for("one_channel_index", channel_id=channel_id))
+    return redirect(url_for("one_channel_index", channel_id=channel_id))

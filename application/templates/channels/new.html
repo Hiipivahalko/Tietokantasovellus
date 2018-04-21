@@ -5,24 +5,17 @@
 <!-- CREATE NEW CHANNEL -->
 
 <form method="POST" action="{{ url_for('channels_create') }}" name="channelform">
+
   <div class="form-group">
-    <table>
-      <tr>
-        <td>{{ channelform.name.label }}:</td>
-        <td>{{ channelform.name(class="form-control") }}</td>
-        <td>
-          <ul>
-            {% for error in channelform.name.errors %}
-              <li>{{ error }}</li>
-            {% endfor %}
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2"><button type="submit" class="btn btn-success">Create new Channel :)</button></td>
-      </tr>
-    </table>
+    <h6>{{ channelform.name.label }}</h6>
+    {{ channelform.name(class="form-control") }}
+    <h6 >{{ channelform.introduction.label }}:</h6>
+    {{ channelform.introduction(class="form-control", rows=10) }}
+    {% for error in channelform.name.errors %}
+      {{ error }}
+    {% endfor %}
   </div>
+  <button type="submit" class="btn btn-success" >Create new Channel :)</button>
 
 </form>
 

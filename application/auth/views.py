@@ -2,11 +2,14 @@ from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 
 from application import app, db
+
 from application.auth.models import Account
-from application.channels.models import Channel
 from application.auth.forms import LoginForm, AccountForm
+
+from application.channels.models import Channel
 from application.channels import models
 from application.messages.models import Message
+
 from application.messages import views
 
 # login to account
@@ -17,7 +20,7 @@ def auth_login():
   if request.method == "GET":
     return render_template("auth/loginform.html", loginform = LoginForm(),
         my_channels=Channel.get_my_channels(-1),
-        all_channels=Channel.get_channels_where_not_in(-1))
+        all_channels=[])
 
   loginform = LoginForm(request.form)
   account = Account.query.filter_by(username=loginform.username.data,
@@ -68,16 +71,20 @@ def account_create():
     messages.append("*username must be 2 character length")
     messages.append("*password must be 8 character length")
     messages.append("*username must be 2 character length")
-    return render_template("auth/new.html", accountform = AccountForm(),
+    messages.append("*email must be 6 character length")
+    return render_template("frontpage.html", accountform = AccountForm(),
       errors = messages)
 
   account = Account(accountform.username.data, accountform.password.data, accountform.motto.data, accountform.email.data)
   account.admin = False
+  channel = Channel.query.get(1)
+
+  channel.accounts.append(account)
 
   db.session().add(account)
   db.session().commit()
 
-  return redirect(url_for("one_channel_index", channel_id = 1, messages = Message.query.all()))
+  return redirect(url_for("auth_login"))
 
 
 

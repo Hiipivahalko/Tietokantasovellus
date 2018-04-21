@@ -4,3 +4,4 @@
 -user can update their informations
 -user can create account for own use
 -user can write comment to message
+-user can join channel

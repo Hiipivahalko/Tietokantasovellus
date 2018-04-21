@@ -28,17 +28,24 @@
 
             <!-- DROPDOWN BUTTON -->
 
-            {% if current_user.is_authenticated %}
+
             <div class="btn-group">
               <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {% if current_user.is_authenticated %}
                   Manage Account
+                {% else %}
+                  Login
+                {% endif %}
               </button>
               <div class="dropdown-menu dropdown-menu-right">
+                {% if current_user.is_authenticated %}
                 <a class="dropdown-item" href="{{ url_for('single_account_index') }}">my account</a>
                 <a class="dropdown-item" href="{{ url_for('auth_logout') }}"> Logout</a>
+                {% else %}
+                <a class="dropdown-item" href="{{ url_for('auth_login') }}">Login</a>
+                {% endif %}
                 {% if current_user.admin == True %}
                 <a class="dropdown-item" href="{{ url_for('account_list') }}">Manage accounts</a>
-                {% endif %}
                 {% endif %}
               </div>
             </div>
@@ -46,55 +53,60 @@
       </nav>
 
 
-      <!-- vertical navication -->
 
-      <div style="float: left">
-        <ul class="nav flex-column">
-        {% if current_user.is_authenticated %}
-          {% if my_channels %}
-          <h4 class="nav-item">Joined Channels</h4>
-          {% endif %}
-          {% for my_channel in my_channels %}
-              <li class="nav-item">
-                <a href="{{ url_for('one_channel_index', channel_id=my_channel.channel_id) }}" class="nav-link">
-                {{ my_channel.channel_name }}
+
+
+
+
+    <!-- MAIN CONTAINER -->
+
+      <div class="container-fluid" >
+        <div class="row">
+
+          <!-- vertical navication -->
+
+            <div class="border-right">
+              <div class="col-sx" >
+                <div style="float: left">
+                  <div class="list-group">
+                  {% if current_user.is_authenticated %}
+                    {% if my_channels %}
+                    <h4 class="list-group-item">Joined Channels</h4>
+                    {% endif %}
+                    {% for my_channel in my_channels %}
+                        <a href="{{ url_for('one_channel_index', channel_id=my_channel.channel_id) }}" class="list-group-item list-group-item-action list-group-item-dark">
+                        {{ my_channel.channel_name }}
+                        </a>
+                    {% endfor %}
+                    <h4 class="list-group-item">All Rest Channels</h4>
+                {% else %}
+                {% if all_channels %}
+                <h4 class="list-group-item">All Channels</h4>
+                {% endif %}
+                {% endif %}
+
+
+                {% for channel in all_channels %}
+                <a href="{{ url_for('one_channel_index', channel_id=channel.id) }}" class="list-group-item list-group-item-action list-group-item-dark">
+                  {{ channel.name }}
                 </a>
-              </li>
-          {% endfor %}
-          <h4 class="nav-item">All Rest Channels</h4>
-      {% else %}
-      {% if all_channels %}
-      <h4 class="nav-item">All Channels</h4>
-      {% endif %}
-      {% endif %}
+                {% endfor %}
+              </div>
+              </div>
+              </div>
+          </div>
 
 
-      {% for channel in all_channels %}
-      <li class="nav-item">
-        <a href="{{ url_for('one_channel_index', channel_id=channel.id) }}" class="nav-link">
-          {{ channel.name }}
-        </a>
-      </li>
-      {% endfor %}
-      </ul>
-    </div>
+          <!-- BLOCK BODY -->
 
-
-    <!-- MAIN CONTAINER / BLOCK BODY -->
-
-      <main role="main" class="container" style="padding-left: 200px">
-
-
+          <div class="col">
             {% block body %}
             <p>
               Tähän tuodaan sisältö muualta.
             </p>
             {% endblock %}
-
-
-
-
-      </main>
+          </div>
+        </div>
 
 
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

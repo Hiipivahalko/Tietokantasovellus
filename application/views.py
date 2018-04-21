@@ -12,11 +12,10 @@ from flask_login import login_required, current_user
 def index():
   channel = Channel.query.get(1)
   account_channels = []
-  channels = Channel.query.all()
+  channels = []
   print(channels)
   print("kanavat")
   if current_user.is_authenticated:
-      print("ollaaaaaaaanko ttääääääälläääää")
       account_channels = Channel.get_my_channels(current_user.id)
       channels = Channel.get_channels_where_not_in(current_user.id)
 

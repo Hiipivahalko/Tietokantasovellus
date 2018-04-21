@@ -3,25 +3,32 @@
 {% block body %}
 
 <!-- LOGIN FORM -->
+<div class="col" style="position: relative; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%)">
+  <h2>Login</h2>
 
-<h2>Login</h2>
+  {{ error }}
 
-{{ error }}
+  <form method="POST" action="{{ url_for('auth_login') }}" name="loginform" >
+    <div class="form-group">
+      <table>
+        <tr>
+          <td>{{ loginform.username.label }}</td>
+          <td>{{ loginform.username(class="form-control") }}</td>
+        </tr>
+        <tr>
+          <td>{{ loginform.password.label }}</td>
+          <td>{{ loginform.password(class="form-control") }}</td>
+        </tr>
+        <tr>
+          <td colspan="2"><button type="submit" class="btn btn-success">Login</button></td>
+        </tr>
+      </table>
+    </div>
 
-<form method="POST" action="{{ url_for('auth_login') }}" name="loginform">
-  <table>
-    <tr>
-      <td>{{ loginform.username.label }}</td>
-      <td>{{ loginform.username }}</td>
-    </tr>
-    <tr>
-      <td>{{ loginform.password.label }}</td>
-      <td>{{ loginform.password }}</td>
-    </tr>
-    <tr>
-      <td colspan="2"><input type="submit" value="Login" /></td>
-    </tr>
-  </table>
-</form>
+  </form>
+</div>
+
+
+
 
 {% endblock %}

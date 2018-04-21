@@ -7,30 +7,34 @@ from application.messages.forms import MessageForm
 from application.channels.models import Channel
 
 
-# post to write new message to specific channel
+# write new message to specific channel
 
 @app.route("/messages/new/<channel_id>/", methods=["POST"])
 @login_required
 def messages_create(channel_id):
 
-  messageform = MessageForm(request.form)
+    messageform = MessageForm(request.form)
+    channel = Channel.query.get(channel_id)
 
-  if not messageform.validate():
-    return render_template("messages/new.html", messageform = messageform)
+    if not messageform.validate():
+        return render_template("channels/channel.html", messageform = MessageForm(), channel = channel,
+            que = Message.count_how_many_comments(channel_id), my_channels=Channel.get_my_channels(current_user.id),
+            all_channels=Channel.get_channels_where_not_in(current_user.id), allready_join = Channel.is_joined(channel_id, current_user.id),
+            error="message must be 2 character length")
 
-  message = Message(messageform.body.data, current_user.username)
-  message.account_id = current_user.id
-  message.channel_id = channel_id
-
-  channel = Channel.query.get(channel_id)
-
-  db.session().add(message)
-  db.session().commit()
-
-  return redirect(url_for("one_channel_index", channel_id = channel_id, messages = channel.messages))
+    message = Message(messageform.body.data, current_user.username)
+    message.account_id = current_user.id
+    message.channel_id = channel_id
 
 
-# Getter to specific message view
+
+    db.session().add(message)
+    db.session().commit()
+
+    return redirect(url_for("one_channel_index", channel_id = channel_id, messages = channel.messages))
+
+
+# message view
 
 @app.route("/channels/<channel_id>/<message_id>/", methods=["GET"])
 @login_required
@@ -39,4 +43,5 @@ def message_index(channel_id, message_id):
   c = Channel.query.get(channel_id)
   m = Message.query.get(message_id)
 
-  return render_template("messages/message.html", channel = c, message = m, comments = m.comments, messageform=MessageForm())
+  return render_template("messages/message.html", channel = c, message = m, comments = m.comments, messageform=MessageForm(),
+    all_channels = Channel.get_channels_where_not_in(current_user.id), my_channels = Channel.get_my_channels(current_user.id))

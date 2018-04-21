@@ -4,133 +4,118 @@
 
 <!-- HEADER -->
 
-<h1 style="padding-bottom: 100px">WELCOME TO varjoForum</h1>
+
 
   {% if not current_user.is_authenticated %}
-    <div class="container" style="padding-bottom: 100px">
+    <div class="container" >
+      <div class="row" style="padding-bottom: 100px">
+        <div class="col">
+          <h1 >varjoForum</h1>
+        </div>
+      </div>
       <div class="row">
+        <div class="col-md">
+          <h3>Welcome to varjoForum, its great place to keep in touch with your friends or colleagues</h3>
+        </div>
         <div class="col col-lg-5">
           <div class="">
 
-
             <!-- REGISTER NEW ACCOUNT -->
-
             <h2>Create Account</h2>
-            {% for error in errors %}
-            <p>{{ error }}</p>
-            {% endfor %}
+            <div class="text-danger">
+              {% for error in errors %}
+              <p>{{ error }}</p>
+              {% endfor %}
+            </div>
 
               <form method="POST" action="{{ url_for('account_create') }}" name="accountform">
                 <div class="form-group">
-                <table>
-                  <tr>
-                    <td>{{ accountform.username.label }}</td>
-                    <td>{{ accountform.username(class="form-control") }}</td>
-                  </tr>
-                  <tr>
-                    <td>{{ accountform.password.label }}</td>
-                    <td>{{ accountform.password(class="form-control") }}</td>
-                  </tr>
-                  <tr>
-                    <td>{{ accountform.motto.label }}</td>
-                    <td>{{ accountform.motto(class="form-control") }}</td>
-                  </tr>
-                  <tr>
-                    <td>{{ accountform.email.label }}</td>
-                    <td>{{ accountform.email(class="form-control") }}</td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><button type="submit" class="btn btn-success">REGISTER</button></td>
-                  </tr>
-                </table>
-                </div>
-              </form>
+                  <h6>{{ accountform.username.label }}</h6>
+                  {{ accountform.username(class="form-control") }}
+                  <small class="form-text text-muted">{{ error }}</small>
 
+                  <h6>{{ accountform.password.label }}</h6>
+                  {{ accountform.password(class="form-control") }}
+                  <small class="form-text text-muted">{{ error }}</small>
+
+                  <h6>{{ accountform.motto.label }}</h6>
+                  {{ accountform.motto(class="form-control") }}
+                  <small class="form-text text-muted">{{ error }}</small>
+
+                  <h6>{{ accountform.email.label }}</h6>
+                  {{ accountform.email(class="form-control") }}
+                </div>
+                <button type="submit" class="btn btn-success">REGISTER</button>
+              </form>
 
           </div>
         </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <!-- CHANNEL -->
 
-        <!-- LOGIN IN TO YOUR ACCOUNT -->
-
-        <div class="col" style="float: right">
+          <h2>{{ channel.name }}</h2>
         </div>
-        <div class="col-md-auto">
-          <h2 class="">Login</h2>
-          {{ error }}
-          <form method="POST" action="{{ url_for('auth_login') }}" name="loginform">
-            <div class="form-group">
-              <table>
-                <tr>
-                  <td>{{ loginform.username.label }}</td>
-                  <td>{{ loginform.username(class="form-control") }}</td>
-                </tr>
-                <tr>
-                  <td>{{ loginform.password.label }}</td>
-                  <td>{{ loginform.password(class="form-control") }}</td>
-                </tr>
-                <tr>
-                  <td colspan="2"><button type="submit" class="btn btn-success">Login</button></td>
-                </tr>
-              </table>
-            </div>
+        <div class="col">
+          <!-- JOIN TO CHANNEL -->
+
+          {% if allready_join == False %}
+          <form method="POST" action="{{ url_for('channels_join', channel_id=channel.id) }}">
+            <button type="submit" class="btn btn-warning">Join this channel</button>
           </form>
+          {% endif %}
+        </div>
+        <div class="col">
+          <!-- IF YOU ARE ADMIN OF CHANNEL YOU CAN UPDATE IT -->
+
+          {% if current_user.admin == True %}
+            <a href="{{ url_for('channel_change', channel_id=channel.id) }}" >
+              <button type="button" class="btn btn-secondary btn-lg" >update</button>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <!-- NEW MESSAGE FORM -->
+
+          {% if current_user.is_authenticated %}
+            <form method="POST" action="{{ url_for('messages_create', channel_id=channel.id) }}" name="messageform" style="padding-bottom: 100px; padding-top: 30px">
+              <div class="form-group">
+                <h6>{{ messageform.body.label }}</h6>
+                {{ messageform.body(class="form-control", rows=10) }}
+                {% for error in messageform.body.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg btn-block" >submit message</button>
+            </form>
+          {% endif %}
+
+          <!-- LIST OF MESSAGES -->
+
+          {% for message in que %}
+            <div class="list-group" style="padding: 10px">
+              <a href="{{ url_for('message_index', channel_id=channel.id, message_id=message.message_id) }}" class="list-group-item list-group-item-action flex-column align-items-start active">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">-- {{ message.writer }} --</h5>
+                  <small>{{ message.date }}</small>
+                </div>
+                <p class="mb-1" style="padding: 7px">{{ message.body }}</p>
+                <small>({{ message.comment_count }}) comments</small>
+              </a>
+            </div>
+          {% endfor %}
         </div>
       </div>
     </div>
   {% endif %}
 
 
-<!-- CHANNEL -->
 
-<h2>{{ channel.name }}</h2>
-
-<!-- JOIN TO CHANNEL -->
-
-{% if allready_join == False %}
-<form method="POST" action="{{ url_for('channels_join', channel_id=channel.id) }}">
-  <button type="submit">Join this channel</button>
-</form>
-{% endif %}
-
-
-<!-- IF YOU ARE ADMIN OF CHANNEL YOU CAN UPDATE IT -->
-
-{% if current_user.admin == True %}
-  <a href="{{ url_for('channel_change', channel_id=channelid) }}" >
-    <button type="button" class="btn btn-secondary btn-lg" >update</button>
-  </a>
-{% endif %}
-
-
-<!-- NEW MESSAGE FORM -->
-
-{% if current_user.is_authenticated %}
-  <form method="POST" action="{{ url_for('messages_create', channel_id=channel.id) }}" name="messageform" style="padding-bottom: 100px; padding-top: 30px">
-    <div class="form-group">
-      <h6>{{ messageform.body.label }}</h6>
-      {{ messageform.body(class="form-control", rows=10) }}
-      {% for error in messageform.body.errors %}
-        {{ error }}
-      {% endfor %}
-    </div>
-    <button type="submit" class="btn btn-primary btn-lg btn-block" >Add new message</button>
-  </form>
-{% endif %}
-
-
-<!-- LIST OF MESSAGES -->
-
-{% for message in que %}
-  <div class="list-group" style="padding: 10px">
-    <a href="{{ url_for('message_index', channel_id=channel.id, message_id=message.message_id) }}" class="list-group-item list-group-item-action flex-column align-items-start active">
-      <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">-- {{ message.writer }} --</h5>
-        <small>{{ message.date }}</small>
-      </div>
-      <p class="mb-1" style="padding: 7px">{{ message.body }}</p>
-      <small>({{ message.comment_count }}) comments</small>
-    </a>
-  </div>
-{% endfor %}
 
 {% endblock %}
