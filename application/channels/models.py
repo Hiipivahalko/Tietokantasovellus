@@ -32,8 +32,8 @@ class Channel(Base):
     def find_all_channels_and_message_count():
         stmt = text("SELECT Channel.id, Channel.name, count(message.id)"
                         " FROM Channel"
-                        " left join Message on message.channel_id = channel.id"
-                        " group by channel.id")
+                        " LEFT JOIN Message ON Message.channel_id = Channel.id"
+                        " GROUP BY Channel.id")
 
         res = db.engine.execute(stmt)
 
