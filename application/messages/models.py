@@ -27,7 +27,7 @@ class Message(Base):
                     " LEFT JOIN Comment ON Message.id = Comment.message_id"
                     " WHERE Channel.id = Message.channel_id"
                         " and Channel.id = :channel_id"
-                    " GROUP BY Message.id").params(channel_id=channel_id)
+                    " GROUP BY Channel.id, Message.id").params(channel_id=channel_id)
 
     res = db.engine.execute(stmt)
 
