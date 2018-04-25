@@ -1,6 +1,6 @@
 # Tietokantasovellus
 
-<https://tsoha-python-prokkis.herokuapp.com>
+<https://varjoforum.herokuapp.com>
 
 ### Keskustelufoorumi
 
@@ -17,7 +17,7 @@ Toimintoja:
 * Ryhmän jäsenen lisääminen, muokkaaminen ja poistaminen
 * Vastineen laatiminen ja muokkaus
 * Kirjoitusten poistaminen
-* Aiheiden määrittely, muokkaus ja poisto 
+* Aiheiden määrittely, muokkaus ja poisto
 
 #### LINKKEJÄ
 
