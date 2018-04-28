@@ -58,21 +58,40 @@
       <!-- LIST OF MESSAGES -->
 
       {% for message in que %}
-        <div class="list-group" style="padding: 10px">
-          <a href="{{ url_for('message_index', channel_id=channel.id, message_id=message.message_id) }}" class="list-group-item list-group-item-action flex-column align-items-start active">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">-- {{ message.writer }} --</h5>
-              <small>{{ message.date }}</small>
-            </div>
-            <p class="mb-1" style="padding: 7px">{{ message.body }}</p>
-            <small>({{ message.comment_count }}) comments</small>
-          </a>
+      <div class="row">
+        <div class="col">
+          <div class="list-group" style="padding: 10px">
+            <a href="{{ url_for('message_index', channel_id=channel.id, message_id=message.message_id) }}" class="list-group-item list-group-item-action flex-column align-items-start active">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">-- {{ message.writer }} --</h5>
+                <small>{{ message.date }}</small>
+              </div>
+              <p class="mb-1" style="padding: 7px">{{ message.body }}</p>
+              <small>({{ message.comment_count }}) comments</small>
+            </a>
+          </div>
         </div>
+        <div class="border-left">
+          <div class="col">
+            {% if current_user.admin == True or current_user.id == message.account_id %}
+            <form action="{{ url_for('delete_message', channel_id=channel.id, message_id=message.message_id) }}" method="POST">
+              <button type="submit" class="close">X</button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+
+
+
       {% endfor %}
     </div>
     {% endif %}
   </div>
 </div>
+
+
 
 
 

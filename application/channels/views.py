@@ -7,6 +7,7 @@ from application.channels.models import Channel
 from application.channels.forms import ChannelForm
 from application.messages.models import Message
 from application.messages.forms import MessageForm
+from application.comments.models import Comment
 
 
 
@@ -107,3 +108,33 @@ def channels_join(channel_id):
     db.session().commit()
 
     return redirect(url_for("one_channel_index", channel_id=channel_id))
+
+
+
+# Channels manager
+
+@app.route("/channel/manage/", methods=["GET"])
+@login_required
+def channel_manager():
+
+    return render_template("channels/manager.html", channels = Channel.query.all(),
+        my_channels=Channel.get_my_channels(current_user.id),
+        all_channels=Channel.get_channels_where_not_in(current_user.id))
+
+
+# DELETE Channel
+
+@app.route("/channel/<channel_id>/delete/", methods=["POST"])
+@login_required
+def delete_channel(channel_id):
+    channel = Channel.query.get(channel_id)
+    messages = Message.query.filter_by(channel_id=channel_id).all()
+
+    for message in messages:
+        Comment.query.filter_by(message_id=message.id).delete()
+        db.session().delete(message)
+
+    db.session().delete(channel)
+    db.session().commit()
+
+    return redirect(url_for("channel_manager"))

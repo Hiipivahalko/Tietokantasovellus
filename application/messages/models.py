@@ -22,7 +22,7 @@ class Message(Base):
 
   @staticmethod
   def count_how_many_comments(channel_id):
-    stmt = text("SELECT Channel.id, Message.id, Channel.name, Message.body, COUNT(Comment.id), Message.writer, Message.date_created"
+    stmt = text("SELECT Channel.id, Message.id, Channel.name, Message.body, COUNT(Comment.id), Message.writer, Message.date_created, Message.account_id"
                     " FROM Channel, Message"
                     " LEFT JOIN Comment ON Message.id = Comment.message_id"
                     " WHERE Channel.id = Message.channel_id"
@@ -34,7 +34,14 @@ class Message(Base):
     response = []
 
     for row in res:
-        response.append({"channel_id":row[0], "message_id":row[1], "channel_name":row[2], "body":row[3], "comment_count":row[4], "writer":row[5], "date":row[6], })
+        response.append({"channel_id":row[0],
+                            "message_id":row[1],
+                            "channel_name":row[2],
+                            "body":row[3],
+                            "comment_count":row[4],
+                            "writer":row[5],
+                            "date":row[6],
+                            "account_id":row[7] })
 
 
     return response

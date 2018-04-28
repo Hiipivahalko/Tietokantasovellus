@@ -5,6 +5,7 @@ from application import app, db
 from application.messages.models import Message
 from application.messages.forms import MessageForm
 from application.channels.models import Channel
+from application.comments.models import Comment
 
 
 # write new message to specific channel
@@ -45,3 +46,16 @@ def message_index(channel_id, message_id):
 
   return render_template("messages/message.html", channel = c, message = m, comments = m.comments, messageform=MessageForm(),
     all_channels = Channel.get_channels_where_not_in(current_user.id), my_channels = Channel.get_my_channels(current_user.id))
+
+
+@app.route("/channels/<channel_id>/<message_id>/delete/", methods=["POST"])
+@login_required
+def delete_message(channel_id, message_id):
+
+    message = Message.query.get(message_id)
+    Comment.query.filter_by(message_id=message_id).delete()
+
+    db.session().delete(message)
+    db.session().commit()
+
+    return redirect(url_for("one_channel_index", channel_id=channel_id))

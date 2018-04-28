@@ -8,9 +8,11 @@ from application.auth.forms import LoginForm, AccountForm
 
 from application.channels.models import Channel
 from application.channels import models
-from application.messages.models import Message
 
+from application.messages.models import Message
 from application.messages import views
+
+from application.comments.models import Comment
 
 # login to account
 
@@ -101,6 +103,7 @@ def accounts_update(account_id):
     messages.append("*username must be 2 character length")
     messages.append("*password must be 8 character length")
     messages.append("*username must be 2 character length")
+    messages.append("*email must be 6 character length")
     return render_template("auth/index.html", accountform = AccountForm(),
       errors = messages, account=current_user,
       my_channels=Channel.get_my_channels(current_user.id),
@@ -137,14 +140,23 @@ def account_list():
 
 
 
-# delete account (admin user can only do that)
+# delete account (admin user can only do that), deleting also account messages (and messages all comments),comments
 
 @app.route("/auth/delete/<account_id>/", methods=["POST"])
 def accounts_delete(account_id):
-  account = Account.query.get(account_id)
-  Message.query.filter_by(account_id=account_id).delete()
+    account = Account.query.get(account_id)
+    messages = Message.query.filter_by(account_id=account_id).all()
 
-  db.session().delete(account)
-  db.session().commit()
+    for message in messages:
+        Comment.query.filter_by(message_id=message.id).delete()
+        db.session().delete(message)
 
-  return redirect(url_for("account_list"))
+
+    Comment.query.filter_by(account_id=account_id).delete()
+
+
+
+    db.session().delete(account)
+    db.session().commit()
+
+    return redirect(url_for("account_list"))
