@@ -2,10 +2,10 @@
 
 {% block body %}
 
-<!-- MESSAGE PAGE - MESSAGE BODY -- -->
+<!-- MESSAGE PAGE - MESSAGE BODY -->
 
 
-  <a href="{{ url_for('one_channel_index', channel_id=channel.id) }}">
+  <a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}">
     <button type="submit" class="btn btn-danger">Back</button>
   </a>
 
@@ -38,7 +38,9 @@
 <div class="list-group" style="padding: 10px">
   <ul class="list-group" style="padding: ">
     <div class="" style="padding-bottom: 5px">
-      <li class="list-group-item list-group-item-warning" >{{ comment.body }} <b>-- {{ comment.writer }} --</b>   <i><small>{{ comment.date_created }}</small></i></li>
+      <li class="list-group-item list-group-item-warning" >
+        {{ comment.body }} <b>-- {{ comment.writer }} --</b>   <i><small>{{ comment.date_created }}</small></i>
+      </li>
     </div>
   </ul>
 </div>

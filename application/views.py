@@ -10,24 +10,36 @@ from flask_login import login_required, current_user
 
 @app.route("/")
 def index():
-  channel = Channel.query.get(1)
-  account_channels = []
-  channels = []
-  print(channels)
-  print("kanavat")
-  if current_user.is_authenticated:
-      account_channels = Channel.get_my_channels(current_user.id)
-      channels = Channel.get_channels_where_not_in(current_user.id)
 
-  return render_template("frontpage.html",
-    messageform=MessageForm(),
-    accountform=AccountForm(),
-    channel=channel,
-    que=Message.count_how_many_comments(1),
-    loginform=LoginForm(),
-    my_channels=account_channels,
-    all_channels=channels)
 
+    return redirect(url_for('frontpage', sort="first"))
 
   # return render_template("channels/channel.html", form = MessageForm(), channel = Channel.query.get(channel_id),
     # que = Message.count_how_many_comments(channel_id))
+
+
+@app.route("/frontpage/<sort>")
+def frontpage(sort):
+
+    query = []
+    if sort == 'first':
+        query=Message.count_how_many_comments_get_first(1)
+    elif sort == 'last':
+        query = Message.count_how_many_comments_get_last(1)
+
+
+    channel = Channel.query.get(1)
+    account_channels = []
+    channels = []
+    if current_user.is_authenticated:
+        account_channels = Channel.get_my_channels(current_user.id)
+        channels = Channel.get_channels_where_not_in(current_user.id)
+
+    return render_template("frontpage.html",
+        messageform=MessageForm(),
+        accountform=AccountForm(),
+        channel=channel,
+        que=query,
+        loginform=LoginForm(),
+        my_channels=account_channels,
+        all_channels=channels)

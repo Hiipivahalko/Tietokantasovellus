@@ -5,36 +5,37 @@ from sqlalchemy.sql import text
 
 class Message(Base):
 
-  body = db.Column(db.Text, nullable=False)
-  writer = db.Column(db.String(144), nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    writer = db.Column(db.String(144), nullable=False)
 
-  account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
-  channel_id = db.Column(db.Integer, db.ForeignKey('channel.id'), nullable=False)
+    account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
+    channel_id = db.Column(db.Integer, db.ForeignKey('channel.id'), nullable=False)
 
-  comments = db.relationship("Comment", backref='message', lazy=True)
+    comments = db.relationship("Comment", backref='message', lazy=True)
 
-  def __init__(self, body, writer):
-    self.body = body
-    self.writer = writer
+    def __init__(self, body, writer):
+        self.body = body
+        self.writer = writer
 
 
-  # query to get messages comments count
+    # query to get messages comments count
 
-  @staticmethod
-  def count_how_many_comments(channel_id):
-    stmt = text("SELECT Channel.id, Message.id, Channel.name, Message.body, COUNT(Comment.id), Message.writer, Message.date_created, Message.account_id"
+    @staticmethod
+    def count_how_many_comments_get_first(channel_id):
+        stmt = text("SELECT Channel.id, Message.id, Channel.name, Message.body, COUNT(Comment.id), Message.writer, Message.date_created, Message.account_id"
                     " FROM Channel, Message"
                     " LEFT JOIN Comment ON Message.id = Comment.message_id"
                     " WHERE Channel.id = Message.channel_id"
                         " and Channel.id = :channel_id"
-                    " GROUP BY Channel.id, Message.id").params(channel_id=channel_id)
+                    " GROUP BY Channel.id, Message.id"
+                    " ORDER BY Message.date_created DESC").params(channel_id=channel_id)
 
-    res = db.engine.execute(stmt)
+        res = db.engine.execute(stmt)
 
-    response = []
+        response = []
 
-    for row in res:
-        response.append({"channel_id":row[0],
+        for row in res:
+            response.append({"channel_id":row[0],
                             "message_id":row[1],
                             "channel_name":row[2],
                             "body":row[3],
@@ -44,4 +45,31 @@ class Message(Base):
                             "account_id":row[7] })
 
 
-    return response
+        return response
+
+    @staticmethod
+    def count_how_many_comments_get_last(channel_id):
+        stmt = text("SELECT Channel.id, Message.id, Channel.name, Message.body, COUNT(Comment.id), Message.writer, Message.date_created, Message.account_id"
+                    " FROM Channel, Message"
+                    " LEFT JOIN Comment ON Message.id = Comment.message_id"
+                    " WHERE Channel.id = Message.channel_id"
+                        " and Channel.id = :channel_id"
+                    " GROUP BY Channel.id, Message.id"
+                    " ORDER BY Message.date_created ASC").params(channel_id=channel_id)
+
+        res = db.engine.execute(stmt)
+
+        response = []
+
+        for row in res:
+            response.append({"channel_id":row[0],
+                            "message_id":row[1],
+                            "channel_name":row[2],
+                            "body":row[3],
+                            "comment_count":row[4],
+                            "writer":row[5],
+                            "date":row[6],
+                            "account_id":row[7] })
+
+
+        return response

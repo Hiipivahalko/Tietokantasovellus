@@ -43,7 +43,8 @@
       <!-- NEW MESSAGE FORM -->
 
       {% if current_user.is_authenticated %}
-        <form method="POST" action="{{ url_for('messages_create', channel_id=channel.id) }}" name="messageform" style="padding-bottom: 100px; padding-top: 30px">
+        <form method="POST" action="{{ url_for('messages_create', channel_id=channel.id) }}" name="messageform"
+            style="padding-bottom: 100px; padding-top: 30px">
           <div class="form-group">
             <h6>{{ messageform.body.label }}</h6>
             {{ messageform.body(class="form-control", rows=10) }}
@@ -55,13 +56,28 @@
         </form>
       {% endif %}
 
+      <!-- sort button -->
+      <div class="row">
+          <div class="btn-group" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+              Sort
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+              <a class="dropdown-item" href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}">First</a>
+              <a class="dropdown-item" href="{{ url_for('one_channel_index', channel_id=channel.id, sort='last')}}">Last</a>
+            </div>
+          </div>
+      </div>
+
       <!-- LIST OF MESSAGES -->
 
       {% for message in que %}
       <div class="row">
         <div class="col">
           <div class="list-group" style="padding: 10px">
-            <a href="{{ url_for('message_index', channel_id=channel.id, message_id=message.message_id) }}" class="list-group-item list-group-item-action flex-column align-items-start active">
+            <a href="{{ url_for('message_index', channel_id=channel.id, message_id=message.message_id) }}"
+                class="list-group-item list-group-item-action flex-column align-items-start active">
               <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">-- {{ message.writer }} --</h5>
                 <small>{{ message.date }}</small>

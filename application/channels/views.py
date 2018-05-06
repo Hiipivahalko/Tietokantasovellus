@@ -43,22 +43,33 @@ def channels_create():
 
     new_channel = Channel.get_channel_by_name(channel.name)
 
-    return redirect(url_for("one_channel_index", channel_id=new_channel))
+    return redirect(url_for("one_channel_index", channel_id=new_channel, sort='first'))
 
 
 
 # single channel view
 
-@app.route("/channels/<channel_id>/", methods=["GET"])
+@app.route("/channels/<channel_id>/<sort>/", methods=["GET"])
 @login_required
-def one_channel_index(channel_id):
+def one_channel_index(channel_id, sort):
 
     if channel_id == "1":
-        return redirect(url_for("index"))
+        return redirect(url_for('frontpage', sort="first"))
 
-    return render_template("channels/channel.html", messageform = MessageForm(), channel = Channel.query.get(channel_id),
-        que = Message.count_how_many_comments(channel_id), my_channels=Channel.get_my_channels(current_user.id),
-        all_channels=Channel.get_channels_where_not_in(current_user.id), allready_join = Channel.is_joined(channel_id, current_user.id))
+    query = []
+
+    if sort == 'first':
+        query= Message.count_how_many_comments_get_first(channel_id)
+    elif sort == 'last':
+        query = Message.count_how_many_comments_get_last(channel_id)
+
+    return render_template("channels/channel.html",
+                            messageform = MessageForm(),
+                            channel = Channel.query.get(channel_id),
+                            que = query ,
+                            my_channels=Channel.get_my_channels(current_user.id),
+                            all_channels=Channel.get_channels_where_not_in(current_user.id),
+                            allready_join = Channel.is_joined(channel_id, current_user.id))
 
 
 
@@ -91,7 +102,7 @@ def channel_update(channel_id):
     c.introduction = channelform.introduction.data
     db.session().commit()
 
-    return redirect(url_for("one_channel_index", channel_id=channel_id))
+    return redirect(url_for("one_channel_index", channel_id=channel_id), sort='first')
 
 
 
@@ -107,7 +118,7 @@ def channels_join(channel_id):
     channel.accounts.append(account)
     db.session().commit()
 
-    return redirect(url_for("one_channel_index", channel_id=channel_id))
+    return redirect(url_for("one_channel_index", channel_id=channel_id, sort='first'))
 
 
 

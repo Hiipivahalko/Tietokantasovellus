@@ -35,7 +35,7 @@ def auth_login():
   print("käyttäjä " + account.username + " tunnistettiin, JEEE :)")
   login_user(account)
 
-  return redirect(url_for("one_channel_index", channel_id = 1, messages = Message.query.all()))
+  return redirect(url_for("frontpage", sort='first'))
 
 
 

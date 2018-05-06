@@ -15,31 +15,29 @@
           <a class="navbar-brand" href="{{ url_for('index') }}">varjoForum</a>
         </div>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
+            aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav mr-auto">
             {% if current_user.is_authenticated %}
-            <div class="border-right">
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('channel_form') }}">Create channel</a>
               </li>
-            </div>
 
             {% endif %}
             {% if current_user.admin == True %}
-            <div class="border-right">
+
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('account_list') }}">Manage accounts</a>
               </li>
-            </div>
-            <div class="border-right">
+
+
               <li class="nav-item">
                 <a href="{{ url_for('channel_manager') }}" class="nav-link">Manage channels</a>
               </li>
-            </div>
 
 
 
@@ -58,7 +56,7 @@
                   Login
                 {% endif %}
               </button>
-              <div class="dropdown-menu dropdown-menu-right">
+              <div class="dropdown-menu dropdown-menu-left">
                 {% if current_user.is_authenticated %}
                 <a class="dropdown-item" href="{{ url_for('single_account_index') }}">my account</a>
                 <a class="dropdown-item" href="{{ url_for('auth_logout') }}"> Logout</a>
@@ -92,8 +90,11 @@
                     {% if my_channels %}
                     <h4 class="list-group-item">Joined Channels</h4>
                     {% endif %}
+
+                    <!-- channels user have allready join -->
                     {% for my_channel in my_channels %}
-                        <a href="{{ url_for('one_channel_index', channel_id=my_channel.channel_id) }}" class="list-group-item list-group-item-action list-group-item-dark">
+                        <a href="{{ url_for('one_channel_index', channel_id=my_channel.channel_id, sort='first') }}"
+                            class="list-group-item list-group-item-action list-group-item-dark">
                         {{ my_channel.channel_name }}
                         </a>
                     {% endfor %}
@@ -104,9 +105,10 @@
                 {% endif %}
                 {% endif %}
 
-
+                <!-- channels that user not joined -->
                 {% for channel in all_channels %}
-                <a href="{{ url_for('one_channel_index', channel_id=channel.id) }}" class="list-group-item list-group-item-action list-group-item-dark">
+                <a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}"
+                    class="list-group-item list-group-item-action list-group-item-dark">
                   {{ channel.name }}
                 </a>
                 {% endfor %}
