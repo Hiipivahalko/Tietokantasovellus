@@ -35,15 +35,27 @@
 
 
 {% for comment in comments %}
-<div class="list-group" style="padding: 10px">
-  <ul class="list-group" style="padding: ">
-    <div class="" style="padding-bottom: 5px">
-      <li class="list-group-item list-group-item-warning" >
-        {{ comment.body }} <b>-- {{ comment.writer }} --</b>   <i><small>{{ comment.date_created }}</small></i>
-      </li>
+<div class="row">
+  <div class="col">
+    <div class="list-group" style="padding: 10px">
+      <ul class="list-group" style="padding: ">
+        <div class="" style="padding-bottom: 5px">
+          <li class="list-group-item list-group-item-warning" >
+            {{ comment.body }} <b>-- {{ comment.writer }} --</b>   <i><small>{{ comment.date_created }}</small></i>
+          </li>
+        </div>
+      </ul>
     </div>
-  </ul>
+  </div>
+  <div class="col-md-auto">
+    {% if current_user.admin == True or current_user.id == comment.account_id %}
+    <form action="{{ url_for('comment_delete', channel_id=channel.id, message_id=message.id, comment_id=comment.id) }}" method="POST">
+      <button type="submit" class="close">X</button>
+    </form>
+    {% endif %}
+  </div>
 </div>
+
 {% endfor %}
 
 
