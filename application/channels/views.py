@@ -34,7 +34,7 @@ def channels_create():
             my_channels=Channel.get_my_channels(current_user.id),
             all_channels=Channel.get_channels_where_not_in(current_user.id))
 
-    channel = Channel(channelform.name.data, channelform.introduction.data)
+    channel = Channel(channelform.name.data, channelform.introduction.data, current_user.id)
 
     channel.accounts.append(current_user)
 
@@ -85,7 +85,7 @@ def channel_change(channel_id):
 
 
 
-# post to update channel
+# update channel
 
 @app.route("/channels/<channel_id>/", methods=["POST"])
 @login_required
@@ -102,7 +102,7 @@ def channel_update(channel_id):
     c.introduction = channelform.introduction.data
     db.session().commit()
 
-    return redirect(url_for("one_channel_index", channel_id=channel_id), sort='first')
+    return redirect(url_for("one_channel_index", channel_id=channel_id, sort='first'))
 
 
 

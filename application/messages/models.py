@@ -53,7 +53,7 @@ class Message(Base):
                     " FROM Channel, Message"
                     " LEFT JOIN Comment ON Message.id = Comment.message_id"
                     " WHERE Channel.id = Message.channel_id"
-                        " and Channel.id = :channel_id"
+                    " and Channel.id = :channel_id"
                     " GROUP BY Channel.id, Message.id"
                     " ORDER BY Message.date_created ASC").params(channel_id=channel_id)
 

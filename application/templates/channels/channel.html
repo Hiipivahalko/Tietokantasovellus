@@ -23,7 +23,7 @@
     <div class="col">
       <!-- UPDATE CHANNEL -->
 
-      {% if current_user.admin == True %}
+      {% if current_user.admin == True or current_user.id == channel.master_id %}
         <a href="{{ url_for('channel_change', channel_id=channel.id) }}" >
           <button type="button" class="btn btn-secondary btn-lg" >update</button>
         </a>

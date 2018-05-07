@@ -13,6 +13,7 @@ class Channel(Base):
 
     name = db.Column(db.String(144), nullable=False)
     introduction = db.Column(db.Text, nullable=False)
+    master_id = db.Column(db.Integer, nullable=False)
     messages = db.relationship("Message", backref='Channel', lazy=True)
 
     accounts = db.relationship('Account', secondary=accounts, lazy='subquery',
@@ -20,10 +21,10 @@ class Channel(Base):
 
 
 
-    def __init__(self, name, introduction):
+    def __init__(self, name, introduction, master_id):
         self.name = name
         self.introduction = introduction
-
+        self.master_id = master_id
 
 
   # query to get channels and how many messages it has
