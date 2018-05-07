@@ -28,4 +28,4 @@ Toimintoja:
 ### esimerkkikäyttäjätunnukset
 
 * admin:admin (admin oikeudet)
-* test:test (normaalikäyttäjä)
+* test:testtest (normaalikäyttäjä)
