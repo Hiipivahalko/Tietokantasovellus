@@ -19,7 +19,7 @@ def messages_create(channel_id):
 
     if not messageform.validate():
         return render_template("channels/channel.html", messageform = MessageForm(), channel = channel,
-            que = Message.count_how_many_comments(channel_id), my_channels=Channel.get_my_channels(current_user.id),
+            que = Message.count_how_many_comments_get_first(channel_id), my_channels=Channel.get_my_channels(current_user.id),
             all_channels=Channel.get_channels_where_not_in(current_user.id), allready_join = Channel.is_joined(channel_id, current_user.id),
             error="message must be 2 character length")
 
