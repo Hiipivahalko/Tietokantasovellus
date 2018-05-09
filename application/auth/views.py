@@ -47,7 +47,6 @@ def auth_logout():
   return redirect(url_for("index"))
 
 
-
 # account view
 
 @app.route("/account/", methods=["GET"])
@@ -59,34 +58,54 @@ def single_account_index():
     all_channels=Channel.get_channels_where_not_in(current_user.id))
 
 
-
-
 # create new account
 
 @app.route("/auth/new/", methods=["POST"])
 def account_create():
 
-  accountform = AccountForm(request.form)
-
-  if not accountform.validate():
+    accountform = AccountForm(request.form)
     messages = []
     messages.append("*username must be 2 character length")
     messages.append("*password must be 8 character length")
-    messages.append("*username must be 2 character length")
+    messages.append("*motto must be 2 character length")
     messages.append("*email must be 6 character length")
-    return render_template("frontpage.html", accountform = AccountForm(),
-      errors = messages)
 
-  account = Account(accountform.username.data, accountform.password.data, accountform.motto.data, accountform.email.data)
-  account.admin = False
-  channel = Channel.query.get(1)
 
-  channel.accounts.append(account)
+    # check if username is whitespaces only
+    if accountform.username.data.isspace():
+        return render_template("frontpage.html",
+                                accountform = AccountForm(),
+                                errors = messages)
 
-  db.session().add(account)
-  db.session().commit()
+    char1 = False
+    email = False
 
-  return redirect(url_for("auth_login"))
+    # email check
+    for c in accountform.email.data:
+        if c == '@':
+            char1 = True
+
+        if char1 == True:
+            if c == '.':
+                email = True
+
+
+    if not accountform.validate() or email == False:
+
+        return render_template("frontpage.html",
+                                accountform = AccountForm(),
+                                errors = messages)
+
+    account = Account(accountform.username.data, accountform.password.data, accountform.motto.data, accountform.email.data)
+    account.admin = False
+    channel = Channel.query.get(1)
+
+    channel.accounts.append(account)
+
+    db.session().add(account)
+    db.session().commit()
+
+    return redirect(url_for("auth_login"))
 
 
 
@@ -138,8 +157,6 @@ def account_list():
      all_channels=Channel.get_channels_where_not_in(current_user.id))
 
 
-
-
 # delete account (admin user can only do that), deleting also account messages (and messages all comments),comments
 
 @app.route("/auth/delete/<account_id>/", methods=["POST"])
@@ -151,10 +168,7 @@ def accounts_delete(account_id):
         Comment.query.filter_by(message_id=message.id).delete()
         db.session().delete(message)
 
-
     Comment.query.filter_by(account_id=account_id).delete()
-
-
 
     db.session().delete(account)
     db.session().commit()

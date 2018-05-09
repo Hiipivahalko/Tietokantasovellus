@@ -3,6 +3,9 @@
 
 {% block body %}
 
+<a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}">
+  <button type="submit" class="btn btn-danger">Cancel</button>
+</a>
 
 <!-- CHANGE CHANNEL NAME -->
 
@@ -12,6 +15,7 @@
   <div class="form-group">
     <h6>{{ channelform.name.label }}</h6>
     {{ channelform.name(class="form-control") }}
+    <p>Old introduction: {{ channel.introduction }}</p>
     <h6 >{{ channelform.introduction.label }}:</h6>
     {{ channelform.introduction(class="form-control", rows=10) }}
     {% for error in channelform.name.errors %}

@@ -8,6 +8,7 @@ from application.channels.forms import ChannelForm
 from application.messages.models import Message
 from application.messages.forms import MessageForm
 from application.comments.models import Comment
+from application.auth.models import Account
 
 
 
@@ -149,3 +150,16 @@ def delete_channel(channel_id):
     db.session().commit()
 
     return redirect(url_for("channel_manager"))
+
+
+# LEAVE CHANNEL
+
+@app.route("/channel/<channel_id>/leave/", methods=["POST"])
+@login_required
+def channel_leave(channel_id):
+
+    Account.leave_from_channel(channel_id, current_user.id)
+
+    db.session().commit()
+
+    return redirect(url_for("one_channel_index", channel_id=channel_id, sort='first'))

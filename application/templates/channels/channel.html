@@ -20,9 +20,19 @@
       </form>
       {% endif %}
     </div>
-    <div class="col">
-      <!-- UPDATE CHANNEL -->
 
+    <!-- LEAVE CHANNEL -->
+    <div class="col">
+      {% if allready_join == True and not current_user.id == channel.master_id %}
+      <form method="POST" action="{{ url_for('channel_leave', channel_id=channel.id) }}">
+        <button type="submit" class="btn btn-danger">Leave Channel</button>
+      </form>
+      {% endif %}
+    </div>
+
+
+    <!-- UPDATE CHANNEL -->
+    <div class="col">
       {% if current_user.admin == True or current_user.id == channel.master_id %}
         <a href="{{ url_for('channel_change', channel_id=channel.id) }}" >
           <button type="button" class="btn btn-secondary btn-lg" >update</button>

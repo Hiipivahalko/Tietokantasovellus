@@ -92,6 +92,8 @@ class Channel(Base):
         return response
 
 
+    # check if user is joined to channel
+
     @staticmethod
     def is_joined(channel_id, account_id):
 
@@ -111,6 +113,9 @@ class Channel(Base):
                 response = True
 
         return response
+
+
+    # get channel by name
 
     @staticmethod
     def get_channel_by_name(channel_name):
