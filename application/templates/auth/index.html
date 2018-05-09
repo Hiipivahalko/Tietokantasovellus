@@ -5,7 +5,7 @@
 
 
 
-<!-- UPDATE YOUR ACCOUNT -->
+<!-- My account view -->
 
 <div class="container" >
   <div class="row" style="padding-bottom: 50px">
@@ -27,13 +27,16 @@
     <div class="col">
       <p><b>channels you have created</b></p>
 
+      <!-- channels what user have create -->
       <ul>
         {% for channel in channels %}
-          <li>{{ channel.name }}</li>
+          <li><a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}">{{ channel.name }}</a></li>
         {% endfor %}
       </ul>
     </div>
     <div class="col">
+
+      <!-- update your account -->
       <p><b>update your account</b></p>
 
       {% for error in errors %}
@@ -69,11 +72,6 @@
     </div>
   </div>
 </div>
-
-
-<!-- CHANNELS WHAT YOU HAVE CREATE -->
-
-
 
 
 {% endblock %}

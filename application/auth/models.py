@@ -34,14 +34,12 @@ class Account(Base):
         return True
 
 
-    # query to get single account channels (query result:(id and name))
+    # query to get account channels (where he/she is master)
 
     @staticmethod
     def find_accounts_channels(account_id):
-        stmt = text("SELECT Channel.id, Channel.name FROM Channel, Account, Accounts "
-                " WHERE Account.id = :account_id"
-                " AND Account.id = Accounts.account_id"
-                " AND Accounts.channel_id = Channel.id").params(account_id=account_id)
+        stmt = text("SELECT Channel.id, Channel.name FROM Channel "
+                " WHERE Channel.master_id = :account_id").params(account_id=account_id)
 
         res = db.engine.execute(stmt)
 

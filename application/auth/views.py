@@ -68,14 +68,8 @@ def account_create():
     messages.append("*username must be 2 character length")
     messages.append("*password must be 8 character length")
     messages.append("*motto must be 2 character length")
-    messages.append("*email must be 6 character length")
+    messages.append("*email must be 6 character length and must be real email")
 
-
-    # check if username is whitespaces only
-    if accountform.username.data.isspace():
-        return render_template("frontpage.html",
-                                accountform = AccountForm(),
-                                errors = messages)
 
     char1 = False
     email = False
@@ -90,7 +84,7 @@ def account_create():
                 email = True
 
 
-    if not accountform.validate() or email == False:
+    if not accountform.validate() or email == False or accountform.username.data.isspace():
 
         return render_template("frontpage.html",
                                 accountform = AccountForm(),
@@ -108,36 +102,52 @@ def account_create():
     return redirect(url_for("auth_login"))
 
 
-
-
 # update account
 
 @app.route("/auth/update/<account_id>/", methods=["POST"])
 def accounts_update(account_id):
 
-  accountform = AccountForm(request.form)
+    accountform = AccountForm(request.form)
 
-  if not accountform.validate():
+    # check if username is whitespaces only
+
+    char1 = False
+    email = False
+
     messages = []
     messages.append("*username must be 2 character length")
     messages.append("*password must be 8 character length")
-    messages.append("*username must be 2 character length")
-    messages.append("*email must be 6 character length")
-    return render_template("auth/index.html", accountform = AccountForm(),
-      errors = messages, account=current_user,
-      my_channels=Channel.get_my_channels(current_user.id),
-      all_channels=Channel.get_channels_where_not_in(current_user.id))
+    messages.append("*motto must be 2 character length")
+    messages.append("*email must be 6 character length and must be real email")
 
-  account = Account.query.get(account_id)
+    # email check
+    for c in accountform.email.data:
+        if c == '@':
+            char1 = True
 
-  account.username = accountform.username.data
-  account.password = accountform.password.data
-  account.motto = accountform.motto.data
-  account.email = accountform.email.data
+        if char1 == True:
+            if c == '.':
+                email = True
 
-  db.session().commit()
+    if not accountform.validate() or email == False or accountform.username.data.isspace():
+        return render_template("auth/index.html",
+                                accountform = AccountForm(),
+                                errors = messages,
+                                account=current_user,
+                                my_channels=Channel.get_my_channels(current_user.id),
+                                all_channels=Channel.get_channels_where_not_in(current_user.id),
+                                channels=Account.find_accounts_channels(current_user.id))
 
-  return redirect(url_for("single_account_index"))
+    account = Account.query.get(account_id)
+
+    account.username = accountform.username.data
+    account.password = accountform.password.data
+    account.motto = accountform.motto.data
+    account.email = accountform.email.data
+
+    db.session().commit()
+
+    return redirect(url_for("single_account_index"))
 
 
 
@@ -148,13 +158,14 @@ def accounts_update(account_id):
 @login_required
 def account_list():
 
-  if current_user.admin == False:
-    return redirect(url_for("messages_index"))
+    if current_user.admin == False:
+        return redirect(url_for("messages_index"))
 
-  if request.method == "GET":
-    return render_template("auth/list.html", accounts = Account.query.all(),
-     my_channels=Channel.get_my_channels(current_user.id),
-     all_channels=Channel.get_channels_where_not_in(current_user.id))
+    if request.method == "GET":
+        return render_template("auth/list.html",
+                                accounts = Account.query.all(),
+                                my_channels=Channel.get_my_channels(current_user.id),
+                                all_channels=Channel.get_channels_where_not_in(current_user.id))
 
 
 # delete account (admin user can only do that), deleting also account messages (and messages all comments),comments
