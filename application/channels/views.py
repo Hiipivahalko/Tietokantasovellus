@@ -11,26 +11,19 @@ from application.comments.models import Comment
 from application.auth.models import Account
 
 
-
 # create new channel
 
-@app.route("/channels/new")
-@login_required
-def channel_form():
-    return render_template("channels/new.html", channelform = ChannelForm(), my_channels=Channel.get_my_channels(current_user.id),
-        all_channels=Channel.get_channels_where_not_in(current_user.id))
-
-
-
-# create new channel if validation is good
-
-@app.route("/channels/", methods=["POST"])
+@app.route("/channels/new/", methods=["GET", "POST"])
 @login_required
 def channels_create():
 
+    if request.method == "GET":
+        return render_template("channels/new.html", channelform = ChannelForm(), my_channels=Channel.get_my_channels(current_user.id),
+            all_channels=Channel.get_channels_where_not_in(current_user.id))
+
     channelform = ChannelForm(request.form)
 
-    if not channelform.validate() or channelform.name.data.isspace():
+    if not channelform.validate():
         return render_template("channels/new.html", channelform = channelform,
             my_channels=Channel.get_my_channels(current_user.id),
             all_channels=Channel.get_channels_where_not_in(current_user.id))
@@ -38,6 +31,7 @@ def channels_create():
     channel = Channel(channelform.name.data, channelform.introduction.data, current_user.id)
 
     channel.accounts.append(current_user)
+    channel.public = False
 
     db.session().add(channel)
     db.session().commit()
@@ -47,15 +41,11 @@ def channels_create():
     return redirect(url_for("one_channel_index", channel_id=new_channel, sort='first'))
 
 
-
 # single channel view
 
 @app.route("/channels/<channel_id>/<sort>/", methods=["GET"])
 @login_required
 def one_channel_index(channel_id, sort):
-
-    if channel_id == "1":
-        return redirect(url_for('frontpage', sort="first"))
 
     query = []
 

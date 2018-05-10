@@ -1,0 +1,1 @@
+Uusi käyttäjä kun saapuu sivulle näkee sovelluksen introviestin ja lomakkeen mistä tehdä itselleen käyttäjä. Tämän jälkeen kun account on luotu, niin käyttäjä syöttää juuri laittamansa tiedot ja kirjautuu sisään. 

@@ -14,6 +14,7 @@ class Channel(Base):
     name = db.Column(db.String(144), nullable=False)
     introduction = db.Column(db.Text, nullable=False)
     master_id = db.Column(db.Integer, nullable=False)
+    public = db.Column(db.Boolean, nullable=False)
     messages = db.relationship("Message", backref='Channel', lazy=True)
 
     accounts = db.relationship('Account', secondary=accounts, lazy='subquery',

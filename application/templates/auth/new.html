@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col">
+    <h1>Create new Account</h1>
+  </div>
+</div>
+
+<hr class="my-4">
+
+<!-- form to create new account -->
+<div class="row">
+  <div class="col">
+    <form method="POST" action="{{ url_for('account_create') }}" name="accountform">
+      <div class="form-group">
+        <h6>{{ accountform.username.label }}</h6>
+        {{ accountform.username(class="form-control", placeholder="username, length atleast 2 characters") }}
+        <div class="text-danger">
+          <small class="form-text text-muted">
+            <ul>
+              {% for error in accountform.username.errors %}
+              <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </small>
+        </div>
+
+        <h6>{{ accountform.password.label }}</h6>
+        {{ accountform.password(class="form-control", placeholder="length atleast 8 characters") }}
+        <div class="text-danger">
+          <small class="form-text text-muted">
+            <ul>
+              {% for error in accountform.password.errors %}
+              <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </small>
+        </div>
+
+        <h6>{{ accountform.password2.label }}</h6>
+        {{ accountform.password2(class="form-control", placeholder="write it again") }}
+        <div class="text-danger">
+          <small class="form-text text-muted">
+            <ul>
+              {% for error in accountform.password2.errors %}
+              <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </small>
+        </div>
+
+        <h6>{{ accountform.motto.label }}</h6>
+        {{ accountform.motto(class="form-control", placeholder="what descripes you") }}
+        <div class="text-danger">
+          <small class="form-text text-muted">
+            <ul>
+              {% for error in accountform.motto.errors %}
+              <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </small>
+        </div>
+
+        <h6>{{ accountform.email.label }}</h6>
+        {{ accountform.email(class="form-control", placeholder="e.g. 'email@email.fi'") }}
+        <div class="text-danger">
+          <small class="form-text text-muted">
+            <ul>
+              {% for error in accountform.email.errors %}
+              <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </small>
+        </div>
+
+        <select class="form-control" name="super">
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
+
+      </div>
+      <button type="submit" class="btn btn-success">REGISTER</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

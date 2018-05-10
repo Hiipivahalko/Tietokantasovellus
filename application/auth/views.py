@@ -32,7 +32,7 @@ def auth_login():
   print("käyttäjä " + account.username + " tunnistettiin, JEEE :)")
   login_user(account)
 
-  return redirect(url_for("frontpage", sort='first'))
+  return redirect(url_for("one_channel_index", channel_id=1, sort='first'))
 
 
 
@@ -57,48 +57,44 @@ def single_account_index():
 
 # create new account
 
-@app.route("/auth/new/", methods=["POST"])
+@app.route("/auth/new/", methods=["GET", "POST"])
 def account_create():
 
+    if request.method == "GET":
+        return render_template("auth/new.html",
+        accountform = AccountForm(),
+        my_channels=Channel.get_my_channels(-1),
+        all_channels=[])
+
     accountform = AccountForm(request.form)
-    messages = []
-    messages.append("*username must be 2 character length")
-    messages.append("*password must be 8 character length")
-    messages.append("*motto must be 2 character length")
-    messages.append("*email must be 6 character length and must be real email")
 
-
-    char1 = False
-    email = False
     not_same = False
 
-    # email check
-    for c in accountform.email.data:
-        if c == '@':
-            char1 = True
-
-        if char1 == True:
-            if c == '.':
-                email = True
-
     if not accountform.password.data == accountform.password2.data:
-        messages.append("*password was not same")
         not_same = True
 
-    if not accountform.validate() or email == False or accountform.username.data.isspace() or not_same == True:
-
+    if not accountform.validate() or not_same == True:
         return render_template("frontpage.html",
-                                accountform = AccountForm(),
-                                errors = messages)
+                                accountform = AccountForm())
 
     account = Account(accountform.username.data, accountform.password.data, accountform.motto.data, accountform.email.data)
-    account.admin = False
+
+    if current_user.is_authenticated:
+        if request.form.get("super") == "True":
+            account.admin = True
+    else:
+        account.admin = False
+
     channel = Channel.query.get(1)
 
     channel.accounts.append(account)
 
     db.session().add(account)
     db.session().commit()
+
+    # this happens if admin is creating account
+    if current_user.is_authenticated:
+        redirect(url_for('one_channel_index', channel_id=1, sort='first'))
 
     return redirect(url_for("auth_login"))
 

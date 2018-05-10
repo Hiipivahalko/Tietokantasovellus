@@ -18,6 +18,8 @@
 
 -admin can remove users
 
+-admin can add users (also superUsers)
+
 -admin can delete all messages
 
 -admin can delete all comments

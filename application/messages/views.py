@@ -8,7 +8,7 @@ from application.channels.models import Channel
 from application.comments.models import Comment
 
 
-# write new message to specific channel
+# WRITE NEW MESSAGE
 
 @app.route("/messages/new/<channel_id>/", methods=["POST"])
 @login_required
@@ -18,9 +18,13 @@ def messages_create(channel_id):
     channel = Channel.query.get(channel_id)
 
     if not messageform.validate() or messageform.body.data.isspace():
-        return render_template("channels/channel.html", messageform = MessageForm(), channel = channel,
-            que = Message.count_how_many_comments_get_first(channel_id), my_channels=Channel.get_my_channels(current_user.id),
-            all_channels=Channel.get_channels_where_not_in(current_user.id), allready_join = Channel.is_joined(channel_id, current_user.id),
+        return render_template("channels/channel.html",
+            messageform = MessageForm(),
+            channel = channel,
+            que = Message.count_how_many_comments_get_first(channel_id),
+            my_channels=Channel.get_my_channels(current_user.id),
+            all_channels=Channel.get_channels_where_not_in(current_user.id),
+            allready_join = Channel.is_joined(channel_id, current_user.id),
             error="message must be 2 character length")
 
 
@@ -34,7 +38,7 @@ def messages_create(channel_id):
     return redirect(url_for("one_channel_index", channel_id = channel_id, sort='first'))
 
 
-# message view
+# MESSAGE VIEW
 
 @app.route("/channels/message/<channel_id>/<message_id>/", methods=["GET"])
 @login_required

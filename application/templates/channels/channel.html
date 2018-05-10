@@ -9,34 +9,38 @@
     <div class="col">
       <h2>{{ channel.name }}</h2>
     </div>
+    <!-- UPDATE CHANNEL -->
+    {% if current_user.admin == True or current_user.id == channel.master_id %}
+    <div class="col-md-auto">
+      <div class="btn-group" role="group">
+        <button id="btnGroupDrop2" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+          ...
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
+          <a class="dropdown-item" href="{{ url_for('channel_change', channel_id=channel.id) }}">Update</a>
+          <a class="dropdown-item" href="">Delete</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
 
-    <!-- JOIN TO CHANNEL -->
-    <div class="col">
-      {% if allready_join == False %}
+    <div class="col-md-auto">
+      <!-- JOIN TO CHANNEL -->
+      {% if allready_join == False and current_user.admin == False and channel.public == False %}
       <form method="POST" action="{{ url_for('channels_join', channel_id=channel.id) }}">
         <button type="submit" class="btn btn-warning">Join this channel</button>
       </form>
-      {% endif %}
-    </div>
-
-    <!-- LEAVE CHANNEL -->
-    <div class="col">
-      {% if allready_join == True and not current_user.id == channel.master_id %}
+      <!-- LEAVE CHANNEL -->
+      {% elif allready_join == True and not current_user.id == channel.master_id and current_user.admin == False and not channel.id == 1 and channel.public == False %}
       <form method="POST" action="{{ url_for('channel_leave', channel_id=channel.id) }}">
         <button type="submit" class="btn btn-danger">Leave Channel</button>
       </form>
       {% endif %}
     </div>
-
-    <!-- UPDATE CHANNEL -->
-    <div class="col">
-      {% if current_user.admin == True or current_user.id == channel.master_id %}
-        <a href="{{ url_for('channel_change', channel_id=channel.id) }}" >
-          <button type="button" class="btn btn-secondary btn-lg" >update</button>
-        </a>
-      {% endif %}
-    </div>
   </div>
+
+
 
   <hr class="my-4">
 
@@ -51,10 +55,10 @@
     <div class="text-danger">
       <p>{{ error }}</p>
     </div>
-  </div>
-  <div class="row">
 
-    {% if allready_join == True or current_user.admin == True %}
+  </div>
+  {% if allready_join == True or current_user.admin == True or channel.public == True %}
+  <div class="row">
     <div class="col">
       <!-- NEW MESSAGE FORM -->
 
@@ -64,9 +68,13 @@
           <div class="form-group">
             <h6>{{ messageform.body.label }}</h6>
             {{ messageform.body(class="form-control", rows=10, placeholder="open your verbal arch") }}
-            {% for error in messageform.body.errors %}
-              {{ error }}
-            {% endfor %}
+          </div>
+          <div class="text-danger">
+            <ul>
+              {% for error in messageform.body.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
           </div>
           <button type="submit" class="btn btn-primary btn-lg btn-block" >submit message</button>
         </form>
@@ -116,14 +124,10 @@
           </div>
         </div>
       </div>
-
-
-
-
       {% endfor %}
     </div>
-    {% endif %}
   </div>
+  {% endif %}
 </div>
 
 

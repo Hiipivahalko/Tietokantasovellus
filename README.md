@@ -5,19 +5,18 @@
 ### Keskustelufoorumi
 
 
-Harjoitustyössä tehdään keskustelufoorumi jonkin yhteisön, vaikkapa opiskelijajärjestön sisäiseen käyttöön. Käyttäjä voi lukea järjestelmän tallennettuja kirjoituksia ja lisätä tietokantaan uusia kirjoituksia, jotka voivat olla myös vastineita aiempiin kirjoituksiin. Kirjoituksia voi hakea kirjoittajan nimen tai aiheen tai artikkelin iän perusteella. Lukija voi seurata myös vastinepolkua. Oletusarvoisesti lukijalle näytetään kaikki tietty ikää tuoreemmat artikkelit varustettuna informaatiolla siitä onko lukija itse ja ovatko kaikki yhteisön jäsenet jo lukeneet artikkelin. Lukija identifioi aina itsensä ja artikkeleihin liitetään tieto henkilöistä jotka ovat lukeneet ne. Tämä tieto on kaikkien lukijoiden saatavissa.
+Harjoitustyössä tehdään keskustelufoorumi yleiseen käyttöön. Foorumilla on erillaisia kanavia mistä voit löytää omanhenkisiä ihmisä ja keskustella kanavaan liittyvistä asioista. Jos kanavalla havaitaan ylilöyntejä tai aiheen ulkopuolista keskustelua, voi superUser/admin poistaa viestejä/kommentteja. Käyttäjä voi luoda myös uuden kanavan jos tuntee että omaa kanavaa ei löydy. Tässä pätee sama sääntö kuin viesteissä/kommenteissa -> admin voi poistaa kanavan jos siellä käydään ei soveliasta keskustelua tai aihe ei ole sopiva. Käyttäjä vois siis kommentoida viestejä ja luoda sitä kautta syvällisempiä keskusteluja tietystä aiheesta. Admin käyttäjä voi luoda uusia käyttäjiä, myös superUsereita eli uusia admin käyttäjiä. Admin voi myös vaatiessa poistaa käyttäjiä.
 
-Järjestelmän ylläpitäjällä on oma liittymä, jonka kautta hän ylläpitää järjestön käyttäjien jäsentietoja ja heidän kuulumistan eri ryhmiin, siivota kirjoituskantaa ja määrittellä aiheita, joiden perusteella kirjoituksia voi ryhmitellä.
+
 
 Toimintoja:
 
 * Kirjautuminen
-* Kirjoituksen lisääminen
+* Kirjoituksen lisääminen ja poistaminen
 * Kirjoitusten näyttäminen eri kriteerein
-* Ryhmän jäsenen lisääminen, muokkaaminen ja poistaminen
-* Vastineen laatiminen ja muokkaus
-* Kirjoitusten poistaminen
-* Aiheiden määrittely, muokkaus ja poisto
+* Kommenttien kirjoittaminen ja poistaminen
+* Kanavien luonti, muokkaus ja poisto
+* Käyttäjien luonti, muokkaus ja poisto
 
 #### LINKKEJÄ
 

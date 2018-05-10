@@ -19,7 +19,6 @@
         <div class="col col-lg-5">
           <div class="">
 
-
             <!-- REGISTER NEW ACCOUNT -->
 
             <h2>Create Account</h2>
@@ -35,9 +34,11 @@
                   {{ accountform.username(class="form-control", placeholder="username, length atleast 2 characters") }}
                   <div class="text-danger">
                     <small class="form-text text-muted">
-                      {% for error in accountform.username.errors %}
-                      {{ error }}
-                      {% endfor %}
+                      <ul>
+                        {% for error in accountform.username.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
                     </small>
                   </div>
 
@@ -45,9 +46,11 @@
                   {{ accountform.password(class="form-control", placeholder="length atleast 8 characters") }}
                   <div class="text-danger">
                     <small class="form-text text-muted">
-                      {% for error in accountform.password.errors %}
-                      {{ error }}
-                      {% endfor %}
+                      <ul>
+                        {% for error in accountform.password.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
                     </small>
                   </div>
 
@@ -55,9 +58,11 @@
                   {{ accountform.password2(class="form-control", placeholder="write it again") }}
                   <div class="text-danger">
                     <small class="form-text text-muted">
-                      {% for error in accountform.password2.errors %}
-                      {{ error }}
-                      {% endfor %}
+                      <ul>
+                        {% for error in accountform.password2.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
                     </small>
                   </div>
 
@@ -65,9 +70,11 @@
                   {{ accountform.motto(class="form-control", placeholder="what descripes you") }}
                   <div class="text-danger">
                     <small class="form-text text-muted">
-                      {% for error in accountform.motto.errors %}
-                      {{ error }}
-                      {% endfor %}
+                      <ul>
+                        {% for error in accountform.motto.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
                     </small>
                   </div>
 
@@ -75,9 +82,11 @@
                   {{ accountform.email(class="form-control", placeholder="e.g. 'email@email.fi'") }}
                   <div class="text-danger">
                     <small class="form-text text-muted">
-                      {% for error in accountform.email.errors %}
-                      {{ error }}
-                      {% endfor %}
+                      <ul>
+                        {% for error in accountform.email.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
                     </small>
                   </div>
                 </div>
@@ -87,99 +96,8 @@
         </div>
       </div>
     </div>
-    {% else %}
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <!-- CHANNEL -->
 
-          <h2>{{ channel.name }}</h2>
-        </div>
-        <div class="col">
-          <!-- JOIN TO CHANNEL -->
-
-          {% if allready_join == False %}
-          <form method="POST" action="{{ url_for('channels_join', channel_id=channel.id) }}">
-            <button type="submit" class="btn btn-warning">Join this channel</button>
-          </form>
-          {% endif %}
-        </div>
-        <div class="col">
-          <!-- IF YOU ARE ADMIN OF CHANNEL YOU CAN UPDATE IT -->
-
-          {% if current_user.admin == True %}
-            <a href="{{ url_for('channel_change', channel_id=channel.id) }}" >
-              <button type="button" class="btn btn-secondary btn-lg" >update</button>
-            </a>
-          {% endif %}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <!-- NEW MESSAGE FORM -->
-
-          {% if current_user.is_authenticated %}
-            <form method="POST" action="{{ url_for('messages_create', channel_id=channel.id) }}" name="messageform"
-                style="padding-bottom: 100px; padding-top: 30px">
-              <div class="form-group">
-                <h6>{{ messageform.body.label }}</h6>
-                {{ messageform.body(class="form-control", rows=10) }}
-                {% for error in messageform.body.errors %}
-                  {{ error }}
-                {% endfor %}
-              </div>
-              <button type="submit" class="btn btn-primary btn-lg btn-block" >submit message</button>
-            </form>
-          {% endif %}
-
-          <!-- sort button -->
-          <div class="row">
-              <div class="btn-group" role="group">
-                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
-                  Sort
-                </button>
-                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                  <a class="dropdown-item" href="{{ url_for('frontpage', sort='first') }}">First</a>
-                  <a class="dropdown-item" href="{{ url_for('frontpage', sort='last')}}">Last</a>
-                </div>
-              </div>
-          </div>
-
-          <!-- LIST OF MESSAGES -->
-
-          {% for message in que %}
-          <div class="row">
-            <div class="col">
-              <div class="list-group" style="padding: 10px">
-                <a href="{{ url_for('message_index', channel_id=channel.id, message_id=message.message_id) }}"
-                    class="list-group-item list-group-item-action flex-column align-items-start active">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">-- {{ message.writer }} --</h5>
-                    <small>{{ message.date }}</small>
-                  </div>
-                  <p class="mb-1" style="padding: 7px">{{ message.body }}</p>
-                  <small>({{ message.comment_count }}) comments</small>
-                </a>
-              </div>
-            </div>
-            <div class="border-left">
-              <div class="col">
-                {% if current_user.admin == True or current_user.id == message.account_id %}
-                <form action="{{ url_for('delete_message', channel_id=channel.id, message_id=message.message_id) }}" method="POST">
-                  <button type="submit" class="close">X</button>
-                </form>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
   {% endif %}
-
-
 
 
 {% endblock %}
