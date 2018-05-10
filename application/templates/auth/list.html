@@ -2,17 +2,25 @@
 
 {% block body %}
 
-<!-- LIST OF ALL varjoFORUM ACCOUNTS -->
+<!-- LIST OF ALL varjoFORUM ACCOUNTS (CAN'T DELETE ADMIN USERS HERE) -->
 
 <h3>All application users</h3>
 
-  {% for account in accounts %}
+  <div class="list-group">
+    {% for account in accounts %}
     {% if account.admin == False %}
-      <form method="POST" action="{{ url_for('accounts_delete', account_id=account.id) }}" name="accountform">
-        <span>{{ account.username }}</span>
-        <input type="submit" value="DELETE" />
-      </form>
-      {% endif %}
-  {% endfor %}
+    <div class="row" style="padding-bottom: 10px">
+      <div class="col">
+        <p class="list-group-item list-group-item-primary">{{ account.username }}</p>
+      </div>
+      <div class="col">
+        <form method="POST" action="{{ url_for('accounts_delete', account_id=account.id) }}" name="accountform">
+          <button type="submit" class="btn btn-danger">DELETE</button>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
 
 {% endblock %}

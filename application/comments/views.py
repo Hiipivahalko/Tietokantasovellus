@@ -18,7 +18,7 @@ def message_new_comment(channel_id, message_id):
 
     messageform = MessageForm(request.form)
 
-    if not messageform.validate():
+    if not messageform.validate() or messageform.body.data.isspace():
         return redirect(url_for("message_index", channel_id=channel_id, message_id=message_id))
 
     comment = Comment(messageform.body.data, current_user.username)

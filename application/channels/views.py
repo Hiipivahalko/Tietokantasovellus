@@ -30,7 +30,7 @@ def channels_create():
 
     channelform = ChannelForm(request.form)
 
-    if not channelform.validate():
+    if not channelform.validate() or channelform.name.data.isspace():
         return render_template("channels/new.html", channelform = channelform,
             my_channels=Channel.get_my_channels(current_user.id),
             all_channels=Channel.get_channels_where_not_in(current_user.id))

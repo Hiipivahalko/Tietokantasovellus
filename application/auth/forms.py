@@ -15,6 +15,7 @@ class LoginForm(FlaskForm):
 class AccountForm(FlaskForm):
   username = TextField("Username", [validators.Length(min=2)])
   password = PasswordField("Password", [validators.Length(min=8)])
+  password2 = PasswordField("Password Again", [validators.Length(min=8)])
   motto = TextField("Motto", [validators.Length(min=2)])
   email = TextField("Email", [validators.Length(min=2)])
 

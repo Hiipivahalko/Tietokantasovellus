@@ -3,27 +3,43 @@
 
 {% block body %}
 
-<a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}">
-  <button type="submit" class="btn btn-danger">Cancel</button>
-</a>
-
-<!-- CHANGE CHANNEL NAME -->
-
-<p>Old name: {{ channel.name }}</p>
-
-<form method="POST" action="{{ url_for('channel_update', channel_id=channel.id) }}" name="channelform">
-  <div class="form-group">
-    <h6>{{ channelform.name.label }}</h6>
-    {{ channelform.name(class="form-control") }}
-    <p>Old introduction: {{ channel.introduction }}</p>
-    <h6 >{{ channelform.introduction.label }}:</h6>
-    {{ channelform.introduction(class="form-control", rows=10) }}
-    {% for error in channelform.name.errors %}
-      {{ error }}
-    {% endfor %}
+<div class="row">
+  <div class="col">
+    <a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}">
+      <button type="submit" class="btn btn-danger">Cancel</button>
+    </a>
   </div>
-  <button type="submit" class="btn btn-warning" >Update Channel :)</button>
 
-  </form>
+</div>
+<div class="row">
+  <div class="col">
+    <!-- CHANGE CHANNEL NAME -->
+
+    <p>Old name: {{ channel.name }}</p>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col">
+    <form method="POST" action="{{ url_for('channel_update', channel_id=channel.id) }}" name="channelform">
+      <div class="form-group">
+        <h6>{{ channelform.name.label }}</h6>
+        {{ channelform.name(class="form-control", value=channel.name) }}
+        <p style="padding-top: 10px">Old introduction: {{ channel.introduction }}</p>
+        <h6 >{{ channelform.introduction.label }}:</h6>
+        {% set f = channelform.introduction.process_data(channel.introduction) %}
+        {{ channelform.introduction(class="form-control", rows=10) }}
+        {% for error in channelform.name.errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+      <button type="submit" class="btn btn-warning" >Update Channel :)</button>
+    </form>
+  </div>
+
+</div>
+
+
 
 {% endblock %}

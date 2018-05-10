@@ -19,7 +19,9 @@
         <div class="col col-lg-5">
           <div class="">
 
+
             <!-- REGISTER NEW ACCOUNT -->
+
             <h2>Create Account</h2>
             <div class="text-danger">
               {% for error in errors %}
@@ -30,7 +32,7 @@
               <form method="POST" action="{{ url_for('account_create') }}" name="accountform">
                 <div class="form-group">
                   <h6>{{ accountform.username.label }}</h6>
-                  {{ accountform.username(class="form-control") }}
+                  {{ accountform.username(class="form-control", placeholder="username, length atleast 2 characters") }}
                   <div class="text-danger">
                     <small class="form-text text-muted">
                       {% for error in accountform.username.errors %}
@@ -40,7 +42,7 @@
                   </div>
 
                   <h6>{{ accountform.password.label }}</h6>
-                  {{ accountform.password(class="form-control") }}
+                  {{ accountform.password(class="form-control", placeholder="length atleast 8 characters") }}
                   <div class="text-danger">
                     <small class="form-text text-muted">
                       {% for error in accountform.password.errors %}
@@ -49,8 +51,18 @@
                     </small>
                   </div>
 
+                  <h6>{{ accountform.password2.label }}</h6>
+                  {{ accountform.password2(class="form-control", placeholder="write it again") }}
+                  <div class="text-danger">
+                    <small class="form-text text-muted">
+                      {% for error in accountform.password2.errors %}
+                      {{ error }}
+                      {% endfor %}
+                    </small>
+                  </div>
+
                   <h6>{{ accountform.motto.label }}</h6>
-                  {{ accountform.motto(class="form-control") }}
+                  {{ accountform.motto(class="form-control", placeholder="what descripes you") }}
                   <div class="text-danger">
                     <small class="form-text text-muted">
                       {% for error in accountform.motto.errors %}
@@ -60,7 +72,7 @@
                   </div>
 
                   <h6>{{ accountform.email.label }}</h6>
-                  {{ accountform.email(class="form-control") }}
+                  {{ accountform.email(class="form-control", placeholder="e.g. 'email@email.fi'") }}
                   <div class="text-danger">
                     <small class="form-text text-muted">
                       {% for error in accountform.email.errors %}

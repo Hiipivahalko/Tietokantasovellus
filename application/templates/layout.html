@@ -8,7 +8,7 @@
 
     <body>
 
-      <!-- NAVIGATION -->
+      <!-- HORIZONTAL NAVIGATION -->
 
       <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
         <div class="border-right">
@@ -45,27 +45,21 @@
           </ul>
 
 
-            <!-- DROPDOWN BUTTON -->
+            <!-- DROPDOWN BUTTON OR LOGIN BUTTON-->
 
-
+            {% if current_user.is_authenticated %}
             <div class="btn-group">
               <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {% if current_user.is_authenticated %}
                   Manage Account
-                {% else %}
-                  Login
-                {% endif %}
               </button>
               <div class="dropdown-menu dropdown-menu-left">
-                {% if current_user.is_authenticated %}
                 <a class="dropdown-item" href="{{ url_for('single_account_index') }}">my account</a>
                 <a class="dropdown-item" href="{{ url_for('auth_logout') }}"> Logout</a>
-                {% else %}
-                <a class="dropdown-item" href="{{ url_for('auth_login') }}">Login</a>
-                {% endif %}
-
               </div>
             </div>
+            {% else %}
+            <a class="btn btn-success" href="{{ url_for('auth_login') }}">Login</a>
+            {% endif %}
         </div>
       </nav>
 

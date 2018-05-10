@@ -5,13 +5,10 @@ from application import app, db
 
 from application.auth.models import Account
 from application.auth.forms import LoginForm, AccountForm
-
 from application.channels.models import Channel
 from application.channels import models
-
 from application.messages.models import Message
 from application.messages import views
-
 from application.comments.models import Comment
 
 # login to account
@@ -73,6 +70,7 @@ def account_create():
 
     char1 = False
     email = False
+    not_same = False
 
     # email check
     for c in accountform.email.data:
@@ -83,8 +81,11 @@ def account_create():
             if c == '.':
                 email = True
 
+    if not accountform.password.data == accountform.password2.data:
+        messages.append("*password was not same")
+        not_same = True
 
-    if not accountform.validate() or email == False or accountform.username.data.isspace():
+    if not accountform.validate() or email == False or accountform.username.data.isspace() or not_same == True:
 
         return render_template("frontpage.html",
                                 accountform = AccountForm(),
@@ -113,6 +114,7 @@ def accounts_update(account_id):
 
     char1 = False
     email = False
+    not_same = False
 
     messages = []
     messages.append("*username must be 2 character length")
@@ -129,7 +131,11 @@ def accounts_update(account_id):
             if c == '.':
                 email = True
 
-    if not accountform.validate() or email == False or accountform.username.data.isspace():
+    if not accountform.password.data == accountform.password2.data:
+        messages.append("*password was not same")
+        not_same = True
+
+    if not accountform.validate() or email == False or accountform.username.data.isspace() or not_same == True:
         return render_template("auth/index.html",
                                 accountform = AccountForm(),
                                 errors = messages,
@@ -150,8 +156,6 @@ def accounts_update(account_id):
     return redirect(url_for("single_account_index"))
 
 
-
-
 # list all account to admin user
 
 @app.route("/auth/allAccount/", methods=["GET"])
@@ -163,7 +167,7 @@ def account_list():
 
     if request.method == "GET":
         return render_template("auth/list.html",
-                                accounts = Account.query.all(),
+                                accounts = Account.query.order_by(Account.username).all(),
                                 my_channels=Channel.get_my_channels(current_user.id),
                                 all_channels=Channel.get_channels_where_not_in(current_user.id))
 

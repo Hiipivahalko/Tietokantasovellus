@@ -1,27 +1,22 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="row">
+<div class="row" style="padding-left:10px">
   <ul class="list-group">
-
     {% for channel in channels %}
-    <table>
-      <tr>
-        <td><li class="list-group-item list-group-item-danger">{{ channel.name }}</li></td>
-        <td>
-          <form action="{{ url_for('delete_channel', channel_id=channel.id) }}" method="POST">
-            <button type="submit" class="btn btn-danger" >DELETE</button>
-          </form>
-        </td>
-      </tr>
-    </table>
-
-
-
-
-
+    <div class="row" style="padding-bottom: 10px">
+      <div class="col">
+        <div class="list-group-item list-group-item-danger">
+          {{ channel.name }}
+        </div>
+      </div>
+      <div class="col-md-auto">
+        <form action="{{ url_for('delete_channel', channel_id=channel.id) }}" method="POST">
+          <button type="submit" class="btn btn-danger" >DELETE</button>
+        </form>
+      </div>
+    </div>
     {% endfor %}
-
   </ul>
 </div>
 

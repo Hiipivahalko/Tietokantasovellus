@@ -3,15 +3,14 @@
 {% block body %}
 
 
-
-
 <!-- My account view -->
 
 <div class="container" >
   <div class="row" style="padding-bottom: 50px">
     <div class="col-md-auto">
 
-      <!-- INFORMATION OF YOUR ACCOUNT -->
+
+      <!-- INFORMATION OF ACCOUNT -->
 
       <h1 style="padding-bottom: 50px">My Account</h1>
 
@@ -27,16 +26,22 @@
     <div class="col">
       <p><b>channels you have created</b></p>
 
-      <!-- channels what user have create -->
-      <ul>
+
+      <!-- CHANNELS WHAT USER HAVE CREATE -->
+      <ul class="list-group">
         {% for channel in channels %}
-          <li><a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}">{{ channel.name }}</a></li>
+          <li>
+            <a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}" class="list-group-item list-group-item-warning">
+              {{ channel.name }}
+            </a>
+          </li>
         {% endfor %}
       </ul>
     </div>
     <div class="col">
 
-      <!-- update your account -->
+
+      <!-- UPDATE YOUR ACCOUNT -->
       <p><b>update your account</b></p>
 
       {% for error in errors %}
@@ -48,30 +53,32 @@
           <table>
             <tr>
               <td>{{ accountform.username.label }}</td>
-              <td>{{ accountform.username(class="form-control") }}</td>
+              <td>{{ accountform.username(class="form-control", value=current_user.username) }}</td>
             </tr>
             <tr>
               <td>{{ accountform.password.label }}</td>
               <td>{{ accountform.password(class="form-control") }}</td>
             </tr>
             <tr>
+              <td>{{ accountform.password2.label }}</td>
+              <td>{{ accountform.password2(class="form-control") }}</td>
+            </tr>
+            <tr>
               <td>{{ accountform.motto.label }}</td>
-              <td>{{ accountform.motto(class="form-control") }}</td>
+              <td>{{ accountform.motto(class="form-control", value=current_user.motto) }}</td>
             </tr>
             <tr>
               <td>{{ accountform.email.label }}</td>
-              <td>{{ accountform.email(class="form-control") }}</td>
+              <td>{{ accountform.email(class="form-control", value=current_user.email) }}</td>
             </tr>
             <tr>
               <td colspan="2"><button type="submit" class="btn btn-warning">UPDATE</button</td>
             </tr>
           </table>
         </div>
-
       </form>
     </div>
   </div>
 </div>
-
 
 {% endblock %}
