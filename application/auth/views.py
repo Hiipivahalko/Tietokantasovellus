@@ -12,7 +12,6 @@ from application.messages import views
 from application.comments.models import Comment
 
 # login to account
-
 @app.route("/auth/login/", methods=["GET", "POST"])
 def auth_login():
 
@@ -37,7 +36,6 @@ def auth_login():
 
 
 # logout
-
 @app.route("/auth/logout")
 def auth_logout():
   logout_user()
@@ -45,7 +43,6 @@ def auth_logout():
 
 
 # account view
-
 @app.route("/account/", methods=["GET"])
 @login_required
 def single_account_index():
@@ -55,11 +52,10 @@ def single_account_index():
     all_channels=Channel.get_channels_where_not_in(current_user.id),
     public_channels=Channel.get_all_publics(),
     messages=Message.query.filter_by(account_id=current_user.id),
-    comments=Comment.query.filter_by(account_id=current_user.id))
+    comments=Comment.get_comment_message_and_channel_id(current_user.id))
 
 
 # create new account
-
 @app.route("/auth/new/", methods=["GET", "POST"])
 def account_create():
 
@@ -77,9 +73,17 @@ def account_create():
     if not accountform.password.data == accountform.password2.data:
         not_same = True
 
+    print("tässä nämä errorit")
+    print(accountform.username.errors)
+    print(accountform.password.errors)
+    print(accountform.motto.errors)
+    print(accountform.email.errors)
+
+
     if not accountform.validate() or not_same == True:
         return render_template("frontpage.html",
-                                accountform = AccountForm())
+                                accountform = AccountForm(),
+                                error="somethin went wrong :(")
 
     account = Account(accountform.username.data, accountform.password.data, accountform.motto.data, accountform.email.data)
 
@@ -94,20 +98,18 @@ def account_create():
 
     # this happens if admin is creating account
     if current_user.is_authenticated:
-        redirect(url_for('one_channel_index', channel_id=1, sort='first'))
+        redirect(url_for("one_channel_index", channel_id=1, sort="first"))
 
     return redirect(url_for("auth_login"))
 
 
 # update account
-
 @app.route("/auth/update/<account_id>/", methods=["POST"])
 def accounts_update(account_id):
 
     accountform = AccountForm(request.form)
 
     # check if username is whitespaces only
-
     char1 = False
     email = False
     not_same = False
@@ -154,7 +156,6 @@ def accounts_update(account_id):
 
 
 # list all account to admin user
-
 @app.route("/auth/allAccount/", methods=["GET"])
 @login_required
 def account_list():
@@ -170,8 +171,8 @@ def account_list():
                                 public_channels=Channel.get_all_publics())
 
 
-# delete account (admin user can only do that), deleting also account messages (and messages all comments),comments
 
+# delete account (admin user can only do that), deleting also account messages (and messages all comments),comments
 @app.route("/auth/delete/<account_id>/", methods=["POST"])
 def accounts_delete(account_id):
     account = Account.query.get(account_id)
@@ -184,6 +185,21 @@ def accounts_delete(account_id):
     Comment.query.filter_by(account_id=account_id).delete()
 
     db.session().delete(account)
+    db.session().commit()
+
+    return redirect(url_for("account_list"))
+
+
+# CHANGE ACCOUNT ADMIN STATUS
+@app.route("/auth/change_admin_level/<account_id>/<direction>/", methods=["POST"])
+def admin_changer(account_id, direction):
+    account = Account.query.get(account_id)
+
+    if direction == "up":
+        account.admin = True
+    else:
+        account.admin = False
+
     db.session().commit()
 
     return redirect(url_for("account_list"))

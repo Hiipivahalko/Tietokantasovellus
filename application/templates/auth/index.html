@@ -15,12 +15,26 @@
       <h1 style="padding-bottom: 50px">My Account</h1>
 
       <h2>username: {{ account.username }}</h2>
-      <p>Email: {{account.email }}</p>
+      <p>Email: {{ account.email }}</p>
       <p>motto: {{ account.motto }}</p>
     </div>
+    {% if current_user.admin == True and not current_user.id == account.id %}
     <div class="col-md-auto">
-
+      {% if account.admin == True %}
+      <form action="{{ url_for('admin_changer', account_id=account.id, direction='down') }}" method="POST">
+        <button type="submit" class="btn btn-warning">
+          downgrade to normal user
+        </button>
+      </form>
+      {% else %}
+      <form action="{{ url_for('admin_changer', account_id=account.id, direction='up') }}" method="POST">
+        <button type="submit" class="btn btn-success">
+          upgrade to superUser
+        </button>
+      </form>
+      {% endif %}
     </div>
+    {% endif %}
   </div>
   <div class="row">
     <div class="col">
@@ -91,9 +105,9 @@
       <h2>Message:</h2>
       <div class="list-group">
         {% for message in messages %}
-        <div class="list-group-item list-group-item-primary">
+        <a class="list-group-item list-group-item-primary" href="{{ url_for('message_index', channel_id=message.channel_id, message_id=message.id)}}">
           {{ message.body }}
-        </div>
+        </a>
         {% endfor %}
       </div>
     </div>
@@ -102,9 +116,9 @@
       <h2>Comments:</h2>
       <div class="list-group">
         {% for comment in comments %}
-        <div class="list-group-item list-group-item-warning">
-          {{ comment.body }}
-        </div>
+        <a class="list-group-item list-group-item-warning" href="{{ url_for('message_index', channel_id=comment.channel_id, message_id=comment.message_id)}}">
+          {{ comment.comment_body }}
+        </a>
         {% endfor %}
       </div>
     </div>

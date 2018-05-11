@@ -8,7 +8,7 @@
 
   <div class="list-group">
     {% for account in accounts %}
-
+    {% if not account.id == current_user.id %}
     <div class="row" style="padding-bottom: 10px">
       <div class="col">
         {% if account.admin == True and not account.id == current_user.id %}
@@ -26,8 +26,23 @@
           <button type="submit" class="btn btn-danger">DELETE</button>
         </form>
       </div>
+      <div class="col-md-auto">
+        {% if account.admin == True %}
+        <form action="{{ url_for('admin_changer', account_id=account.id, direction='down') }}" method="POST">
+          <button type="submit" class="btn btn-warning">
+            downgrade to normal user
+          </button>
+        </form>
+        {% else %}
+        <form action="{{ url_for('admin_changer', account_id=account.id, direction='up') }}" method="POST">
+          <button type="submit" class="btn btn-success">
+            upgrade to superUser
+          </button>
+        </form>
+        {% endif %}
+      </div>
     </div>
-
+    {% endif %}
     {% endfor %}
   </div>
 

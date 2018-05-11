@@ -18,10 +18,17 @@ from application.auth.models import Account
 def channels_create():
 
     if request.method == "GET":
-        return render_template("channels/new.html", channelform = ChannelForm(), my_channels=Channel.get_my_channels(current_user.id),
-            all_channels=Channel.get_channels_where_not_in(current_user.id))
+        return render_template("channels/new.html",
+                                channelform = ChannelForm(),
+                                my_channels=Channel.get_my_channels(current_user.id),
+                                all_channels=Channel.get_channels_where_not_in(current_user.id),
+                                public_channels=Channel.get_all_publics())
 
     channelform = ChannelForm(request.form)
+    print("tässä errorit jeeeee")
+    for error in channelform.name.errors:
+        print("hellurei täs nyt")
+        print(error)
 
     if not channelform.validate():
         return render_template("channels/new.html", channelform = channelform,

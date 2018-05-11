@@ -134,14 +134,14 @@ class Channel(Base):
         return null
 
 
-    # Get all public channels
+    # Get all public channels (YOU HAVE CHANGE Channel.public if you want to work local)
 
     @staticmethod
     def get_all_publics():
 
         stmt = text("SELECT Channel.id, Channel.name"
                     " FROM Channel"
-                    " WHERE Channel.public = True")
+                    " WHERE Channel.public = 1")
 
         res = db.engine.execute(stmt)
 
