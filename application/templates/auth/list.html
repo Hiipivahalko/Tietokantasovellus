@@ -11,15 +11,12 @@
     {% if not account.id == current_user.id %}
     <div class="row" style="padding-bottom: 10px">
       <div class="col">
-        {% if account.admin == True and not account.id == current_user.id %}
-        <p class="list-group-item list-group-item-primary">
-          {{ account.username }} (ADMIN USER)
-        </p>
-        {% else %}
-        <p class="list-group-item list-group-item-primary">
-          {{ account.username }}
-        </p>
-        {% endif %}
+
+        <a class="list-group-item list-group-item-primary" href="{{ url_for('single_account_index', account_id=account.id) }}">
+          {{ account.username }} {% if account.admin == True and not account.id == current_user.id %} (ADMIN USER) {% endif %}
+        </a>
+
+
       </div>
       <div class="col">
         <form method="POST" action="{{ url_for('accounts_delete', account_id=account.id) }}" name="accountform">
