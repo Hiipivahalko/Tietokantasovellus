@@ -53,8 +53,14 @@ def message_index(channel_id, message_id):
     if m is not None:
         comments = m.comments
 
-    return render_template("messages/message.html", channel = c, message = m, comments = comments, messageform=MessageForm(),
-        all_channels = Channel.get_channels_where_not_in(current_user.id), my_channels = Channel.get_my_channels(current_user.id))
+    return render_template("messages/message.html",
+                            channel = c,
+                            message = m,
+                            comments = comments,
+                            messageform=MessageForm(),
+                            all_channels = Channel.get_channels_where_not_in(current_user.id),
+                            my_channels = Channel.get_my_channels(current_user.id),
+                            public_channels=Channel.get_all_publics())
 
 # DELETE MESSAGE
 
