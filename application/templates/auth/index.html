@@ -12,10 +12,18 @@
 
       <!-- INFORMATION OF ACCOUNT -->
 
-      <h1 style="padding-bottom: 50px">My Account</h1>
+      <h1 style="padding-bottom: 50px">
+        {% if account.id == current_user.id or current_user.admin == True %}
+        My Account
+        {% else %}
+        {{ account.username }} Account
+        {% endif %}
+      </h1>
 
       <h2>username: {{ account.username }}</h2>
+      {% if account.id == current_user.id or current_user.admin == True %}
       <p>Email: {{ account.email }}</p>
+      {% endif %}
       <p>motto: {{ account.motto }}</p>
     </div>
     {% if current_user.admin == True and not current_user.id == account.id %}
@@ -38,14 +46,14 @@
   </div>
   <div class="row">
     <div class="col">
-      <p><b>channels you have created</b></p>
+      <p><b>channels {{ account.username }} have created</b></p>
 
 
       <!-- CHANNELS WHAT USER HAVE CREATE -->
       <ul class="list-group">
         {% for channel in channels %}
           <li>
-            {% if channel.master_id == current_user.id %}
+            {% if channel.master_id == account.id %}
             <a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}" class="list-group-item list-group-item-success">
               {{ channel.name }}
             </a>
@@ -58,8 +66,9 @@
         {% endfor %}
       </ul>
     </div>
-    <div class="col">
 
+    {% if account.id == current_user.id or current_user.admin == True %}
+    <div class="col">
 
       <!-- UPDATE YOUR ACCOUNT -->
       <p><b>update your account</b></p>
@@ -128,6 +137,7 @@
       </div>
     </div>
   </div>
+  {% endif %}
 </div>
 
 {% endblock %}

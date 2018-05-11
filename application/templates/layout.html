@@ -48,7 +48,7 @@
                   Manage Account
               </button>
               <div class="dropdown-menu dropdown-menu-left">
-                <a class="dropdown-item" href="{{ url_for('single_account_index') }}">my account</a>
+                <a class="dropdown-item" href="{{ url_for('single_account_index', account_id=current_user.id) }}">my account</a>
                 <a class="dropdown-item" href="{{ url_for('auth_logout') }}"> Logout</a>
               </div>
             </div>

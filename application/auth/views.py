@@ -43,16 +43,20 @@ def auth_logout():
 
 
 # account view
-@app.route("/account/", methods=["GET"])
+@app.route("/account/<account_id>/", methods=["GET"])
 @login_required
-def single_account_index():
-  return render_template("auth/index.html", account = current_user, accountform = AccountForm(),
-    channels = Account.find_accounts_channels(current_user.id),
-    my_channels=Channel.get_my_channels(current_user.id),
-    all_channels=Channel.get_channels_where_not_in(current_user.id),
-    public_channels=Channel.get_all_publics(),
-    messages=Message.query.filter_by(account_id=current_user.id),
-    comments=Comment.get_comment_message_and_channel_id(current_user.id))
+def single_account_index(account_id):
+    account = Account.query.get(account_id)
+
+    return render_template("auth/index.html",
+        account = account, 
+        accountform = AccountForm(),
+        channels = Account.find_accounts_channels(account_id),
+        my_channels=Channel.get_my_channels(account_id),
+        all_channels=Channel.get_channels_where_not_in(account_id),
+        public_channels=Channel.get_all_publics(),
+        messages=Message.query.filter_by(account_id=account_id),
+        comments=Comment.get_comment_message_and_channel_id(account_id))
 
 
 # create new account
