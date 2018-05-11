@@ -103,7 +103,7 @@ def channel_update(channel_id):
 
     c.name = channelform.name.data
     c.introduction = channelform.introduction.data
-    if channelform.public.data == "True":
+    if channelform.public.data == "true":
         c.public = True
     else:
         c.public = False

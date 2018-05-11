@@ -52,6 +52,7 @@ class Channel(Base):
         stmt = text("SELECT Channel.id, Channel.name, Channel.master_id"
                     " FROM Channel, Account, Accounts"
                     " WHERE Channel.id = Accounts.channel_id"
+                    " AND Channel.public == False"
                     " AND Account.id = Accounts.account_id"
                     " AND Account.id = :account_id"
                     " ORDER BY Channel.name").params(account_id=account_id)
