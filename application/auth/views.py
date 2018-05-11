@@ -147,7 +147,9 @@ def accounts_update(account_id):
                                 my_channels=Channel.get_my_channels(current_user.id),
                                 all_channels=Channel.get_channels_where_not_in(current_user.id),
                                 channels=Account.find_accounts_channels(current_user.id),
-                                public_channels=Channel.get_all_publics())
+                                public_channels=Channel.get_all_publics(),
+                                messages=Message.query.filter_by(account_id=current_user.id),
+                                comments=Comment.get_comment_message_and_channel_id(current_user.id))
 
     account = Account.query.get(account_id)
 
