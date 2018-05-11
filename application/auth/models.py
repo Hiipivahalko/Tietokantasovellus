@@ -38,14 +38,19 @@ class Account(Base):
 
     @staticmethod
     def find_accounts_channels(account_id):
-        stmt = text("SELECT Channel.id, Channel.name FROM Channel "
-                " WHERE Channel.master_id = :account_id").params(account_id=account_id)
+        stmt = text("SELECT Channel.id, Channel.name, Channel.master_id FROM Channel, Account, Accounts "
+                " WHERE Channel.master_id = :account_id"
+                " OR (Account.id = :account_id"
+                " AND Account.id = Accounts.account_id"
+                " AND Channel.master_id = Accounts.channel_id)"
+                " GROUP BY Channel.id"
+                " ORDER BY Channel.name").params(account_id=account_id)
 
         res = db.engine.execute(stmt)
 
         response = []
         for row in res:
-            response.append({"id":row[0], "name":row[1]})
+            response.append({"id":row[0], "name":row[1], "master_id":row[2]})
 
         return response
 

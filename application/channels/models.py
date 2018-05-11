@@ -46,34 +46,35 @@ class Channel(Base):
         return response
 
 
-  # query to get channels were account has joined
+  # CHANNELS WERE ACCOUNT HAVE JOINED
 
     @staticmethod
     def get_my_channels(account_id):
 
-        stmt = text("SELECT Channel.id, Channel.name"
+        stmt = text("SELECT Channel.id, Channel.name, Channel.master_id"
                     " FROM Channel, Account, Accounts"
                     " WHERE Channel.id = Accounts.channel_id"
                     " AND Account.id = Accounts.account_id"
-                    " AND Account.id = :account_id").params(account_id=account_id)
+                    " AND Account.id = :account_id"
+                    " ORDER BY Channel.name").params(account_id=account_id)
 
         res = db.engine.execute(stmt)
 
         response = []
 
         for row in res:
-            response.append({"channel_id":row[0], "channel_name":row[1]})
+            response.append({"channel_id":row[0], "channel_name":row[1], "master_id":row[2]})
 
 
         return response
 
 
-  # query to get all other channels that account not joined
+  # query to get all other private channels that account not joined
 
     @staticmethod
     def get_channels_where_not_in(account_id):
 
-        stmt = text("SELECT channel.id, channel.name"
+        stmt = text("SELECT channel.id, channel.name, channel.public"
                     " FROM Channel"
                     " WHERE Channel.id NOT IN ("
                         " SELECT Channel.id"
@@ -81,14 +82,14 @@ class Channel(Base):
                             " WHERE Channel.id = Accounts.channel_id"
                             " AND Account.id = Accounts.account_id"
                             " AND Account.id = :account_id"
-                    " )").params(account_id=account_id)
+                            " )").params(account_id=account_id)
 
         res = db.engine.execute(stmt)
 
         response = []
 
         for row in res:
-            response.append({"id":row[0], "name":row[1]})
+            response.append({"id":row[0], "name":row[1], "public":row[2]})
 
         return response
 
@@ -131,3 +132,41 @@ class Channel(Base):
             return row[0]
 
         return null
+
+
+    # Get all public channels
+
+    @staticmethod
+    def get_all_publics():
+
+        stmt = text("SELECT Channel.id, Channel.name"
+                    " FROM Channel"
+                    " WHERE Channel.public = 1")
+
+        res = db.engine.execute(stmt)
+
+        response = []
+
+        for row in res:
+            response.append({"id":row[0], "name":row[1]})
+
+        return response
+
+
+    # Count how many users is joined to channel
+
+    @staticmethod
+    def count_accounts(channel_id):
+
+        stmt = text("SELECT COUNT(*) FROM Accounts WHERE Accounts.channel_id = :channel_id").params(channel_id=channel_id)
+
+        res = db.engine.execute(stmt)
+
+        response = 0
+
+        for row in res:
+            response = row[0]
+
+        print(response)
+
+        return response

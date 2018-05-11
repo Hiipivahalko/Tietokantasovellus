@@ -8,7 +8,7 @@
 
   <div class="form-group">
     <h6>{{ channelform.name.label }}</h6>
-    {{ channelform.name(class="form-control") }}
+    {{ channelform.name(class="form-control", placeholder="name") }}
     <div class="text-danger">
       <ul>
         {% for error in channelform.name.errors %}
@@ -18,7 +18,7 @@
     </div>
 
     <h6 >{{ channelform.introduction.label }}:</h6>
-    {{ channelform.introduction(class="form-control", rows=10) }}
+    {{ channelform.introduction(class="form-control", rows=10, placeholder="Introduce your channel little bit that new users get your point") }}
     <div class="text-danger">
       <ul>
         {% for error in channelform.introduction.errors %}
@@ -26,6 +26,10 @@
         {% endfor %}
       </ul>
     </div>
+
+    <h6 >{{ channelform.public.label }}:</h6>
+    {{ channelform.public(class="form-control") }}
+    
 
   </div>
   <button type="submit" class="btn btn-success" >Create new Channel :)</button>

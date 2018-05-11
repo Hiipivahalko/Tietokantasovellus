@@ -25,7 +25,8 @@ def messages_create(channel_id):
             my_channels=Channel.get_my_channels(current_user.id),
             all_channels=Channel.get_channels_where_not_in(current_user.id),
             allready_join = Channel.is_joined(channel_id, current_user.id),
-            error="message must be 2 character length")
+            error="message must be 2 character length",
+            public_channels=Channel.get_all_publics())
 
 
     message = Message(messageform.body.data, current_user.username)

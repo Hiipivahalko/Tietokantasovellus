@@ -29,17 +29,16 @@
             {% endif %}
             {% if current_user.admin == True %}
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('account_list') }}">Manage accounts</a>
-              </li>
-              <li class="nav-item">
                 <a href="{{ url_for('channel_manager') }}" class="nav-link">Manage channels</a>
               </li>
               <li class="nav-item">
                 <a href="{{ url_for('account_create') }}" class="nav-link">Create Account</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('account_list') }}">Manage accounts</a>
+              </li>
             {% endif %}
           </ul>
-
 
             <!-- DROPDOWN BUTTON OR LOGIN BUTTON-->
 
@@ -59,12 +58,6 @@
         </div>
       </nav>
 
-
-
-
-
-
-
     <!-- MAIN CONTAINER -->
 
       <div class="container-fluid" >
@@ -77,16 +70,33 @@
                 <div style="float: left">
                   <div class="list-group">
                   {% if current_user.is_authenticated %}
+
+                    <!-- PUBLIC CHANNEL -->
+                    <h4 class="list-group-item">Public Channels</h4>
+                    {% for public in public_channels %}
+                      <a href="{{ url_for('one_channel_index', channel_id=public.id, sort='first') }}"
+                          class="list-group-item list-group-item-action list-group-item-dark">
+                        {{ public.name }}
+                      </a>
+                    {% endfor %}
                     {% if my_channels %}
-                    <h4 class="list-group-item">Joined Channels</h4>
+                      <!-- JOINED CHANNELS -->
+                      <h4 class="list-group-item">Joined Channels</h4>
                     {% endif %}
 
                     <!-- channels user have allready join -->
                     {% for my_channel in my_channels %}
-                        <a href="{{ url_for('one_channel_index', channel_id=my_channel.channel_id, sort='first') }}"
-                            class="list-group-item list-group-item-action list-group-item-dark">
+                      {% if my_channel.master_id == current_user.id %}
+                      <a href="{{ url_for('one_channel_index', channel_id=my_channel.channel_id, sort='first') }}"
+                          class="list-group-item list-group-item-action list-group-item-success">
                         {{ my_channel.channel_name }}
-                        </a>
+                      </a>
+                      {% else %}
+                      <a href="{{ url_for('one_channel_index', channel_id=my_channel.channel_id, sort='first') }}"
+                          class="list-group-item list-group-item-action list-group-item-dark">
+                        {{ my_channel.channel_name }}
+                      </a>
+                      {% endif %}
                     {% endfor %}
                     <h4 class="list-group-item">All Rest Channels</h4>
                 {% else %}
@@ -97,16 +107,17 @@
 
                 <!-- channels that user not joined -->
                 {% for channel in all_channels %}
-                <a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}"
-                    class="list-group-item list-group-item-action list-group-item-dark">
-                  {{ channel.name }}
-                </a>
+                  {% if channel.public == False %}
+                  <a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}"
+                      class="list-group-item list-group-item-action list-group-item-dark">
+                    {{ channel.name }}
+                  </a>
+                  {% endif %}
                 {% endfor %}
               </div>
               </div>
               </div>
           </div>
-
 
           <!-- BLOCK BODY -->
 

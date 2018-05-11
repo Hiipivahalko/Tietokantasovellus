@@ -52,7 +52,10 @@ def single_account_index():
   return render_template("auth/index.html", account = current_user, accountform = AccountForm(),
     channels = Account.find_accounts_channels(current_user.id),
     my_channels=Channel.get_my_channels(current_user.id),
-    all_channels=Channel.get_channels_where_not_in(current_user.id))
+    all_channels=Channel.get_channels_where_not_in(current_user.id),
+    public_channels=Channel.get_all_publics(),
+    messages=Message.query.filter_by(account_id=current_user.id),
+    comments=Comment.query.filter_by(account_id=current_user.id))
 
 
 # create new account
@@ -64,7 +67,8 @@ def account_create():
         return render_template("auth/new.html",
         accountform = AccountForm(),
         my_channels=Channel.get_my_channels(-1),
-        all_channels=[])
+        all_channels=[],
+        public_channels=Channel.get_all_publics())
 
     accountform = AccountForm(request.form)
 
@@ -84,10 +88,6 @@ def account_create():
             account.admin = True
     else:
         account.admin = False
-
-    channel = Channel.query.get(1)
-
-    channel.accounts.append(account)
 
     db.session().add(account)
     db.session().commit()
@@ -138,7 +138,8 @@ def accounts_update(account_id):
                                 account=current_user,
                                 my_channels=Channel.get_my_channels(current_user.id),
                                 all_channels=Channel.get_channels_where_not_in(current_user.id),
-                                channels=Account.find_accounts_channels(current_user.id))
+                                channels=Account.find_accounts_channels(current_user.id),
+                                public_channels=Channel.get_all_publics())
 
     account = Account.query.get(account_id)
 
@@ -165,7 +166,8 @@ def account_list():
         return render_template("auth/list.html",
                                 accounts = Account.query.order_by(Account.username).all(),
                                 my_channels=Channel.get_my_channels(current_user.id),
-                                all_channels=Channel.get_channels_where_not_in(current_user.id))
+                                all_channels=Channel.get_channels_where_not_in(current_user.id),
+                                public_channels=Channel.get_all_publics())
 
 
 # delete account (admin user can only do that), deleting also account messages (and messages all comments),comments

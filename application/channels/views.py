@@ -26,12 +26,18 @@ def channels_create():
     if not channelform.validate():
         return render_template("channels/new.html", channelform = channelform,
             my_channels=Channel.get_my_channels(current_user.id),
-            all_channels=Channel.get_channels_where_not_in(current_user.id))
+            all_channels=Channel.get_channels_where_not_in(current_user.id),
+            public_channels=Channel.get_all_publics())
 
     channel = Channel(channelform.name.data, channelform.introduction.data, current_user.id)
 
-    channel.accounts.append(current_user)
-    channel.public = False
+
+    if channelform.public.data == "true":
+        channel.public = True
+    else:
+        channel.public = False
+        channel.accounts.append(current_user)
+
 
     db.session().add(channel)
     db.session().commit()
@@ -48,6 +54,7 @@ def channels_create():
 def one_channel_index(channel_id, sort):
 
     query = []
+    account_count = Channel.count_accounts(channel_id)
 
     if sort == 'first':
         query= Message.count_how_many_comments_get_first(channel_id)
@@ -60,7 +67,9 @@ def one_channel_index(channel_id, sort):
                             que = query ,
                             my_channels=Channel.get_my_channels(current_user.id),
                             all_channels=Channel.get_channels_where_not_in(current_user.id),
-                            allready_join = Channel.is_joined(channel_id, current_user.id))
+                            allready_join = Channel.is_joined(channel_id, current_user.id),
+                            public_channels=Channel.get_all_publics(),
+                            account_count=account_count)
 
 
 
@@ -72,7 +81,8 @@ def channel_change(channel_id):
 
     return render_template("channels/update.html", channel = Channel.query.get(channel_id),
         channelform = ChannelForm(), my_channels=Channel.get_my_channels(current_user.id),
-        all_channels=Channel.get_channels_where_not_in(current_user.id))
+        all_channels=Channel.get_channels_where_not_in(current_user.id),
+        public_channels=Channel.get_all_publics())
 
 
 
@@ -91,6 +101,11 @@ def channel_update(channel_id):
 
     c.name = channelform.name.data
     c.introduction = channelform.introduction.data
+    if channelform.public.data == "True":
+        c.public = True
+    else:
+        c.public = False
+
     db.session().commit()
 
     return redirect(url_for("one_channel_index", channel_id=channel_id, sort='first'))
@@ -121,7 +136,8 @@ def channel_manager():
 
     return render_template("channels/manager.html", channels = Channel.query.all(),
         my_channels=Channel.get_my_channels(current_user.id),
-        all_channels=Channel.get_channels_where_not_in(current_user.id))
+        all_channels=Channel.get_channels_where_not_in(current_user.id),
+        public_channels=Channel.get_all_publics())
 
 
 # DELETE Channel

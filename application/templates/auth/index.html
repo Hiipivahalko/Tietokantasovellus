@@ -31,9 +31,15 @@
       <ul class="list-group">
         {% for channel in channels %}
           <li>
-            <a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}" class="list-group-item list-group-item-warning">
+            {% if channel.master_id == current_user.id %}
+            <a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}" class="list-group-item list-group-item-success">
               {{ channel.name }}
             </a>
+            {% else %}
+            <a href="{{ url_for('one_channel_index', channel_id=channel.id, sort='first') }}" class="list-group-item list-group-item-dark">
+              {{ channel.name }}
+            </a>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>
@@ -77,6 +83,30 @@
           </table>
         </div>
       </form>
+    </div>
+  </div>
+  <div class="row" style="padding-top: 20px">
+    <!-- list of your messages -->
+    <div class="col">
+      <h2>Message:</h2>
+      <div class="list-group">
+        {% for message in messages %}
+        <div class="list-group-item list-group-item-primary">
+          {{ message.body }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col">
+      <!-- list of your comments -->
+      <h2>Comments:</h2>
+      <div class="list-group">
+        {% for comment in comments %}
+        <div class="list-group-item list-group-item-warning">
+          {{ comment.body }}
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </div>

@@ -11,7 +11,7 @@ from application.messages.models import Message
 from application.messages.forms import MessageForm
 
 
-# add new comment to message
+# ADD NEW COMMENT
 
 @app.route("/channel/<channel_id>/message/<message_id>/newcomment/", methods=["POST"])
 def message_new_comment(channel_id, message_id):
@@ -29,6 +29,9 @@ def message_new_comment(channel_id, message_id):
     db.session().commit()
 
     return redirect(url_for("message_index", channel_id=channel_id, message_id=message_id))
+
+
+# DELETE COMMENT
 
 @app.route("/<channel_id>/<message_id>/<comment_id>/delete_comment/", methods=["POST"])
 def comment_delete(channel_id, message_id, comment_id):

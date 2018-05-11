@@ -9,6 +9,11 @@
     <div class="col">
       <h2>{{ channel.name }}</h2>
     </div>
+    {% if  channel.public == False %}
+    <div class="col-md-auto">
+      users joined -> {{ account_count }}
+    </div>
+    {% endif %}
     <!-- UPDATE CHANNEL -->
     {% if current_user.admin == True or current_user.id == channel.master_id %}
     <div class="col-md-auto">
