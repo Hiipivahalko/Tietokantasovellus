@@ -25,8 +25,7 @@
 * pip freeze | grep -v pkg-resources > requirements.txt
 * pip install flask-wtf
 * pip install flask-login
-
-Näiden lisäksi sinun pitää vaihtaa koodissa polussa application/channels/models.py rivillä 144 oleva teksit muotoon " WHERE Channel.public = 1", jotta sovellus voi käyttää sqliteä. Sovellus käyttää siis paikallisesti sqliteä, tuotannossa on postgresql.
+* python run.py
 
 # Sovelluksesta puuttuva ominaisuudet
 
