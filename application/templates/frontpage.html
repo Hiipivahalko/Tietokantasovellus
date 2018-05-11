@@ -22,9 +22,11 @@
             <!-- REGISTER NEW ACCOUNT -->
 
             <h2>Create Account</h2>
-            <div class="text-danger">
-              <p>{{ error }}</p>
-            </div>
+            <ul class="list-group">
+              {% for error in errors %}
+              <li class="list-group-item list-group-item-danger">{{ error }}</li>
+              {% endfor %}
+            </ul>
 
               <form method="POST" action="{{ url_for('account_create') }}" name="accountform">
                 <div class="form-group">
@@ -56,6 +58,7 @@
                         <li>{{ error }}</li>
                         {% endfor %}
                       </ul>
+                      {{ pass_error }}
                   </div>
 
                   <h6>{{ accountform.motto.label }}</h6>

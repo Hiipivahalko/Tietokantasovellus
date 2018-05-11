@@ -64,9 +64,14 @@
       <!-- UPDATE YOUR ACCOUNT -->
       <p><b>update your account</b></p>
 
-      {% for error in errors %}
-        <p>{{ error }}</p>
-      {% endfor %}
+      <ul class="list-group">
+        {% for error in errors %}
+        <li class="list-group-item list-group-item-danger">{{ error }}</li>
+        {% endfor %}
+      </ul>
+
+
+
 
       <form method="POST" action="{{ url_for('accounts_update', account_id=account.id) }}" name="accountform">
         <div class="form-group">

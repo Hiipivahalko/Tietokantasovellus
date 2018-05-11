@@ -59,7 +59,6 @@ def single_account_index():
 @app.route("/auth/new/", methods=["GET", "POST"])
 def account_create():
 
-    print("Miksi sinä olet rikkiiiiiii")
 
     if request.method == "GET":
         return render_template("auth/new.html",
@@ -68,29 +67,29 @@ def account_create():
             all_channels=Channel.get_channels_where_not_in(current_user.id),
             public_channels=Channel.get_all_publics())
 
+    messages = []
+    messages.append("THESE ARE THE CONDITIONS YOU MUST PAST")
+    messages.append("*username must be 2 character length")
+    messages.append("*password must be 8 character length")
+    messages.append("*motto must be 2 character length")
+    messages.append("*email must be 6 character length and must be real email")
 
     accountform = AccountForm(request.form)
-
+    password_wrong = ""
     not_same = False
 
     if not accountform.password.data == accountform.password2.data:
+        password_wrong="Passwords must be same"
         not_same = True
-
-
-    print("tässä nämä errorit")
-    print(accountform.username.errors)
-    print(accountform.password.errors)
-    print(accountform.motto.errors)
-    print(accountform.email.errors)
-
 
     if not accountform.validate() or not_same == True:
         return render_template("frontpage.html",
                                 accountform = AccountForm(),
-                                error="somethin went wrong :(")
+                                error="somethin went wrong :(",
+                                pass_error = password_wrong,
+                                errors=messages)
 
     account = Account(accountform.username.data, accountform.password.data, accountform.motto.data, accountform.email.data)
-    print("ollaaaaanko eeeedeeesss tääällääääääää")
     account.admin = False
 
     if current_user.is_authenticated:
@@ -99,7 +98,6 @@ def account_create():
 
 
     db.session().add(account)
-    print("nyt tehtiin lisäysaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     db.session().commit()
 
     # this happens if admin is creating account
@@ -111,6 +109,7 @@ def account_create():
 
 # update account
 @app.route("/auth/update/<account_id>/", methods=["POST"])
+@login_required
 def accounts_update(account_id):
 
     accountform = AccountForm(request.form)
@@ -121,6 +120,7 @@ def accounts_update(account_id):
     not_same = False
 
     messages = []
+    messages.append("THESE ARE THE CONDITIONS YOU MUST PAST")
     messages.append("*username must be 2 character length")
     messages.append("*password must be 8 character length")
     messages.append("*motto must be 2 character length")
