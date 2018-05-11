@@ -62,3 +62,17 @@ CREATE TABLE comment (
 	FOREIGN KEY(message_id) REFERENCES message (id),
 	FOREIGN KEY(account_id) REFERENCES account (id)
 );
+
+
+# index
+
+CREATE INDEX idx_channel_id on Channel (id);
+CREATE INDEX idx_account_id on Account (id);
+CREATE INDEX idx_accounts_account_id on Accounts (account_id);
+CREATE INDEX idx_accounts_channel_id on Accounts (channel_id);
+CREATE INDEX idx_message_id on Message (id);
+CREATE INDEX idx_message_account_id on Message (account_id);
+CREATE INDEX idx_message_channel_id on Message (channel_id);
+CREATE INDEX idx_comment_id on Comment (id);
+CREATE INDEX idx_comment_account_id on Comment (account_id);
+CREATE INDEX idx_comment_message_id on Comment (message_id);
