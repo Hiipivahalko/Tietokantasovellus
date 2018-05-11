@@ -141,7 +141,7 @@ class Channel(Base):
 
         stmt = text("SELECT Channel.id, Channel.name"
                     " FROM Channel"
-                    " WHERE Channel.public = 1")
+                    " WHERE Channel.public = True")
 
         res = db.engine.execute(stmt)
 

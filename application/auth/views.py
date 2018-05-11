@@ -57,13 +57,14 @@ def single_account_index():
 
 # create new account
 @app.route("/auth/new/", methods=["GET", "POST"])
+@login_required
 def account_create():
 
     if request.method == "GET":
         return render_template("auth/new.html",
         accountform = AccountForm(),
-        my_channels=Channel.get_my_channels(-1),
-        all_channels=[],
+        my_channels=Channel.get_my_channels(current_user.id),
+        all_channels=Channel.get_channels_where_not_in(current_user.id),
         public_channels=Channel.get_all_publics())
 
     accountform = AccountForm(request.form)
