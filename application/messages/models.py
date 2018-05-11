@@ -24,7 +24,7 @@ class Message(Base):
     def count_how_many_comments_get_first(channel_id):
         stmt = text("SELECT Channel.id, Message.id, Channel.name, Message.body, COUNT(Comment.id), Message.writer, Message.date_created, Message.account_id, Account.motto"
                     " FROM Channel, Message, Account"
-                    " LEFT JOIN Comment ON Message.id = Comment.message_id"
+                    " LEFT JOIN Comment ON Comment.message_id = Message.id"
                     " WHERE Channel.id = Message.channel_id"
                     " and Channel.id = :channel_id"
                     " AND Account.id = Message.account_id"
