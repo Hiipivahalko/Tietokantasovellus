@@ -28,7 +28,7 @@ class Message(Base):
                     " WHERE Channel.id = Message.channel_id"
                     " and Channel.id = :channel_id"
                     " AND Account.id = Message.account_id"
-                    " GROUP BY Channel.id, Message.id"
+                    " GROUP BY Channel.id, Account.id, Message.id"
                     " ORDER BY Message.date_created DESC").params(channel_id=channel_id)
 
         res = db.engine.execute(stmt)
