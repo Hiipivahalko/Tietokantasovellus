@@ -28,8 +28,7 @@ class Channel(Base):
         self.master_id = master_id
 
 
-  # query to get channels and how many messages it has
-
+    # query to get channels and how many messages it has
     @staticmethod
     def find_all_channels_and_message_count():
         stmt = text("SELECT Channel.id, Channel.name, count(message.id)"
@@ -46,8 +45,7 @@ class Channel(Base):
         return response
 
 
-  # CHANNELS WERE ACCOUNT HAVE JOINED
-
+    # CHANNELS WERE ACCOUNT HAVE JOINED
     @staticmethod
     def get_my_channels(account_id):
 
@@ -69,8 +67,7 @@ class Channel(Base):
         return response
 
 
-  # query to get all other private channels that account not joined
-
+    # query to get all other private channels that account not joined
     @staticmethod
     def get_channels_where_not_in(account_id):
 
@@ -95,7 +92,6 @@ class Channel(Base):
 
 
     # check if user is joined to channel
-
     @staticmethod
     def is_joined(channel_id, account_id):
 
@@ -118,7 +114,6 @@ class Channel(Base):
 
 
     # get channel by name
-
     @staticmethod
     def get_channel_by_name(channel_name):
 
@@ -135,7 +130,6 @@ class Channel(Base):
 
 
     # Get all public channels (YOU HAVE CHANGE Channel.public if you want to work local)
-
     @staticmethod
     def get_all_publics():
 
@@ -154,7 +148,6 @@ class Channel(Base):
 
 
     # Count how many users is joined to channel
-
     @staticmethod
     def count_accounts(channel_id):
 

@@ -57,15 +57,17 @@ def single_account_index():
 
 # create new account
 @app.route("/auth/new/", methods=["GET", "POST"])
-@login_required
 def account_create():
+
+    print("Miksi sinä olet rikkiiiiiii")
 
     if request.method == "GET":
         return render_template("auth/new.html",
-        accountform = AccountForm(),
-        my_channels=Channel.get_my_channels(current_user.id),
-        all_channels=Channel.get_channels_where_not_in(current_user.id),
-        public_channels=Channel.get_all_publics())
+            accountform = AccountForm(),
+            my_channels=Channel.get_my_channels(current_user.id),
+            all_channels=Channel.get_channels_where_not_in(current_user.id),
+            public_channels=Channel.get_all_publics())
+
 
     accountform = AccountForm(request.form)
 
@@ -73,6 +75,7 @@ def account_create():
 
     if not accountform.password.data == accountform.password2.data:
         not_same = True
+
 
     print("tässä nämä errorit")
     print(accountform.username.errors)
@@ -87,19 +90,21 @@ def account_create():
                                 error="somethin went wrong :(")
 
     account = Account(accountform.username.data, accountform.password.data, accountform.motto.data, accountform.email.data)
+    print("ollaaaaanko eeeedeeesss tääällääääääää")
+    account.admin = False
 
     if current_user.is_authenticated:
         if request.form.get("super") == "True":
             account.admin = True
-    else:
-        account.admin = False
+
 
     db.session().add(account)
+    print("nyt tehtiin lisäysaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     db.session().commit()
 
     # this happens if admin is creating account
     if current_user.is_authenticated:
-        redirect(url_for("one_channel_index", channel_id=1, sort="first"))
+        return redirect(url_for("one_channel_index", channel_id=1, sort="first"))
 
     return redirect(url_for("auth_login"))
 

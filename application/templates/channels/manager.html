@@ -15,6 +15,9 @@
           <button type="submit" class="btn btn-danger" >DELETE</button>
         </form>
       </div>
+      <div class="col-md-auto">
+        <a href="{{ url_for('channel_change', channel_id=channel.id) }}" class="btn btn-secondary">UPDATE</a>
+      </div>
     </div>
     {% endfor %}
   </ul>

@@ -11,8 +11,7 @@ from application.comments.models import Comment
 from application.auth.models import Account
 
 
-# create new channel
-
+# CREATE NEW CHANNEL
 @app.route("/channels/new/", methods=["GET", "POST"])
 @login_required
 def channels_create():
@@ -54,8 +53,7 @@ def channels_create():
     return redirect(url_for("one_channel_index", channel_id=new_channel, sort='first'))
 
 
-# single channel view
-
+# SINGLE CHANNEL VIEW
 @app.route("/channels/<channel_id>/<sort>/", methods=["GET"])
 @login_required
 def one_channel_index(channel_id, sort):
@@ -79,9 +77,7 @@ def one_channel_index(channel_id, sort):
                             account_count=account_count)
 
 
-
 # update channel information
-
 @app.route("/channels/<channel_id>/update/", methods=["GET"])
 @login_required
 def channel_change(channel_id):
@@ -93,8 +89,7 @@ def channel_change(channel_id):
 
 
 
-# update channel
-
+# UPDATE CHANNEL
 @app.route("/channels/<channel_id>/", methods=["POST"])
 @login_required
 def channel_update(channel_id):
@@ -119,9 +114,7 @@ def channel_update(channel_id):
 
 
 
-# join to channel
-
-
+# JOIN TO CHANNEL
 @app.route("/channel/join/<channel_id>/", methods=["POST"])
 @login_required
 def channels_join(channel_id):
@@ -135,8 +128,7 @@ def channels_join(channel_id):
 
 
 
-# Channels manager
-
+# CHANNEL MANAGER
 @app.route("/channel/manage/", methods=["GET"])
 @login_required
 def channel_manager():
@@ -147,8 +139,7 @@ def channel_manager():
         public_channels=Channel.get_all_publics())
 
 
-# DELETE Channel
-
+# DELETE CHANNEL
 @app.route("/channel/<channel_id>/delete/", methods=["POST"])
 @login_required
 def delete_channel(channel_id):
@@ -166,7 +157,6 @@ def delete_channel(channel_id):
 
 
 # LEAVE CHANNEL
-
 @app.route("/channel/<channel_id>/leave/", methods=["POST"])
 @login_required
 def channel_leave(channel_id):

@@ -14,7 +14,7 @@
       users joined -> {{ account_count }}
     </div>
     {% endif %}
-    <!-- UPDATE CHANNEL -->
+    <!-- UPDATE OR DELETE CHANNEL -->
     {% if current_user.admin == True or current_user.id == channel.master_id %}
     <div class="col-md-auto">
       <div class="btn-group" role="group">
@@ -24,7 +24,7 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
           <a class="dropdown-item" href="{{ url_for('channel_change', channel_id=channel.id) }}">Update</a>
-          <a class="dropdown-item" href="">Delete</a>
+          <a class="dropdown-item" href="{{ url_for('delete_channel', channel_id=channel_id) }}">Delete</a>
         </div>
       </div>
     </div>
@@ -111,13 +111,16 @@
             <a href="{{ url_for('message_index', channel_id=channel.id, message_id=message.message_id) }}"
                 class="list-group-item list-group-item-action flex-column align-items-start active">
               <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">-- {{ message.writer }} --</h5>
+                <h5 class="mb-1">{{ message.body }}</h5>
                 <small>{{ message.date }}</small>
               </div>
-              <p class="mb-1" style="padding: 7px">{{ message.body }}</p>
-              <small>({{ message.comment_count }}) comments</small>
+              <p class="mb-1" style="padding: 7px">({{ message.comment_count }}) comments</p>
+              <small>{{ message.motto }}</small>
             </a>
           </div>
+        </div>
+        <div class="col-md-auto">
+          <a href="#" class="btn btn-danger" style="padding: 10px">-- {{ message.writer }} --</a>
         </div>
         <div class="border-left">
           <div class="col-md-auto">
