@@ -22,11 +22,12 @@ class Message(Base):
 
     @staticmethod
     def count_how_many_comments_get_first(channel_id):
-        stmt = text("SELECT Channel.id, Message.id, Channel.name, Message.body, COUNT(Comment.id), Message.writer, Message.date_created, Message.account_id"
-                    " FROM Channel, Message"
+        stmt = text("SELECT Channel.id, Message.id, Channel.name, Message.body, COUNT(Comment.id), Message.writer, Message.date_created, Message.account_id, Account.motto, Account.id"
+                    " FROM Channel, Account, Message"
                     " LEFT JOIN Comment ON Comment.message_id = Message.id"
                     " WHERE Channel.id = Message.channel_id"
                     " and Channel.id = :channel_id"
+                    " AND Account.id = Message.account_id"
                     " GROUP BY Channel.id, Message.id"
                     " ORDER BY Message.date_created DESC").params(channel_id=channel_id)
 
@@ -42,7 +43,9 @@ class Message(Base):
                             "comment_count":row[4],
                             "writer":row[5],
                             "date":row[6],
-                            "account_id":row[7] })
+                            "account_id":row[7],
+                            "account_motto":row[8],
+                            "account_id":row[9] })
 
 
         return response

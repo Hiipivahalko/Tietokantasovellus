@@ -45,4 +45,4 @@ Näiden lisäksi sinun pitää vaihtaa koodissa polussa application/channels/mod
 * työtä riitti uudenoppimisessa, mutta jälkeenpäin tuntui hyvältä aina kun oivalsi jonkin asian
 * dokumentaatio vastaa mielestäni hyvin sovellusta
 * kurssin alun materiaali ajoin hyvin projektiin, oli helppo lähteä työstämään työtään. Toki kurssin dokumentaation loppui kuin seinään ja loppu jätettiin tekijän vastuulle. Tästä omat hyvät ja huonot fiilikset. Joitan jippoja/kikkoja olisi voinut vinkata.
-*
+* Validointeja en saanut lopulta toimimaan oikein kaikkiin formeihin, vaikka tein samallalailla kuten sellaisissa formeissa missä ne toimivat kuten pitää. Jos pystytte kertomaan miksi esim. accountin luonnissa olevat validoinnit ei toimi, olisin kiitollinen. Validoinnit siis toimivat kyllä, mutta virhe viestejä ei jostain syystä itse sivulla näy.
